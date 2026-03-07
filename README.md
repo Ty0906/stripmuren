@@ -14,9 +14,40 @@ Interactieve webapplicatie bouwen rond de stripmuren in Brussel
 
 ## 2. Gebruikte API's met links
 
----
+Dataset: bruxelles_parcours_bd
+
+Bron: Opendata.brussels.be
+
+URL: https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=-1
+
+Dataset:
+- naam van de stripmuur (NL)
+- naam van de stripmuur (FR)
+- Tekenaar 
+- adres (NL)
+- adres (FR)
+- gemeente (NL)
+- gemeente (FR)
+- wijk 
+- foto
 
 ## 3. Implementatie van technische vereiste
+
+1. DOM-manipulatie:
+    Genereren van kaarten
+
+2. Modern JavaScript:
+    - const/let
+    - template literals(truthly/falsy/..)
+    - async/await
+
+3. Data & API:
+    - Fetch API
+    - JSON 
+
+4. Styling:
+   - CSS basis
+   - Flexbox layout
 
 ---
 ## 4. Installatiehandleiding
