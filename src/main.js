@@ -45,6 +45,9 @@ async function loadStripmuren(params) {
         const titelNL = mural.naam_fresco_nl || "Titel onbekend (NL)";
         const titelFR = mural.nom_de_la_fresque || "Titre inconnu (FR)";
 
+        const tekenaarNL = mural.dessinateur || "Tekenaar onbekend";
+        const tekenaarFR = mural.dessinateur || "Dessinateur inconnu"
+
         const adresNL = mural.adres_nl || "Adres onbekend (NL)";
         const adresFR = mural.adresse_fr ||"Adresse inconnu (FR)"
 
@@ -74,12 +77,13 @@ async function loadStripmuren(params) {
           <div class="mural-img">${fotoHTML}</div>
 
           <h2>${titelNL}</h2>
+
+          <p><b>Tekenaar: </b> ${tekenaarNL}</p>
           
           <p><b>Adres: </b> ${adresNL}</p>
 
           <p><b>Gemeente: </b> ${gemeenteNL}</p>
-
-          <p><b>Wijk: </b> ${wijkNL}</p>
+          
        </article>
       `
     }
