@@ -40,6 +40,7 @@ Dataset:
     - const/let
     - template literals(truthly/falsy/..)
     - async/await
+    - Local Storage
 
 3. Data & API:
     - Fetch API
@@ -68,6 +69,12 @@ Dataset:
 ---
 
 ## 6. Gebruikte bronnen
+
+Open Data Brussels API
+
+Documentatie uit de Canvas modules Web Advanced en Web Basic
+
+MDN (topic: Array)
 
 ### AI chatlog
 
