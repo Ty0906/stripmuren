@@ -18,6 +18,12 @@ app.innerHTML = `
  </div>
  <h1>Stripmuren Brussel Routeplanner</h1>
  <p id="status">Data wordt geladen...</p>
+ <section class="filters">
+ <input id="filter-favorites" type="checkbox">
+ <label for="filter-favorites">Toon enkel ❤️ Favoriete ❤️ Stripmuren </label>
+ <label for="search-murals"> Zoeken </label>
+ <input id"search-murals" type="text" size="20">
+ </section>
  <section id="murals" class="murals"></section>
  </main>
 `;
@@ -26,6 +32,32 @@ app.innerHTML = `
 const statusElement = document.getElementById('status');
 
 let allMurals = [];
+
+function getMurals() {
+  const filterFavo = document.getElementById('filter-favorites');
+    if (!filterFavo || !filterFavo.checked) {
+      return allMurals;
+    } 
+    else {
+      let newMurals = [];
+
+     for (let fm of allMurals)
+        {
+          let muralImageId = fm?.image?.id;
+          if (!muralImageId) continue;
+          
+          muralImageId = String(muralImageId);
+          if (favoriteMurals.includes(muralImageId))
+          {
+            newMurals.push(fm);
+            
+          }
+        }
+        return newMurals;
+      }
+    
+}
+
 // favoriete stripmuren in localStorage
 let favoriteMurals = JSON.parse(localStorage.getItem('favoriteMurals')) || [];
 
@@ -60,14 +92,36 @@ document.addEventListener('click', function (event) {
     favoriteMurals.push(id);
   }
 
+
   localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
 
   btn.innerHTML = favoriteMurals.includes(id) ? "❤️" : "🤍";
    
   console.log("favorieten: " + favoriteMurals);
-} );
+
+  const filterFavo = document.getElementById('filter-favorites');
+    if (!filterFavo || !filterFavo.checked) {
+      statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`;
+    }
+    else {  renderMurals(getMurals(), favoriteMurals);
+      statusElement.textContent = `Aantal ❤️ Favoriete ❤️ Stripmuren: ${getMurals().length}`}
+     
+  });
 
 
+
+  //event om te weken wanneer checkbox is aangevinkt of is uitgevinkt
+
+  const checkboxFilter = document.getElementById("filter-favorites");
+
+  checkboxFilter.addEventListener('change', () => {
+    renderMurals(getMurals(), favoriteMurals);
+    const filterFavo = document.getElementById('filter-favorites');
+    if (!filterFavo || !filterFavo.checked) {
+      statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`}
+    else {
+      statusElement.textContent = `Aantal ❤️ Favoriete ❤️ Stripmuren: ${getMurals().length}`}
+  });
 
 async function loadStripmuren(params) {
 
@@ -76,9 +130,9 @@ async function loadStripmuren(params) {
 
     allMurals = murals;
     
-    statusElement.textContent = `Aantal stripmuren: ${murals.length}`;
+    statusElement.textContent = `Totaal Aantal stripmuren: ${murals.length}`;
 
-    renderMurals(murals, favoriteMurals);
+    renderMurals(getMurals(), favoriteMurals);
 
     //resultaten in DOM tonen
     console.log(allMurals);
