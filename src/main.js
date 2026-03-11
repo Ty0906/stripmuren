@@ -29,7 +29,12 @@ let allMurals = [];
 // favoriete stripmuren in localStorage
 let favoriteMurals = JSON.parse(localStorage.getItem('favoriteMurals')) || [];
 
+favoriteMurals = favoriteMurals.filter(id => 
+  id &&
+  id !== "undefined" &&
+  id !== "null");
 
+  localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
 
 // event 'click' om favoriete stripmuren aan te duiden
 
@@ -39,6 +44,8 @@ document.addEventListener('click', function (event) {
    if (!btn) return; 
     
    const id = btn.getAttribute('data-id');
+   
+   if (!id || id == "undefined" || id == "null") { return;}
 
    if (favoriteMurals.includes(id)) {
     /*
@@ -57,6 +64,7 @@ document.addEventListener('click', function (event) {
 
   btn.innerHTML = favoriteMurals.includes(id) ? "❤️" : "🤍";
    
+  console.log("favorieten: " + favoriteMurals);
 } );
 
 
@@ -72,6 +80,9 @@ async function loadStripmuren(params) {
 
     renderMurals(murals, favoriteMurals);
 
+    //resultaten in DOM tonen
+    console.log(allMurals);
+    console.log("favorieten: " + favoriteMurals);
     
   }
 
