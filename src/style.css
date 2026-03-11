@@ -57,6 +57,14 @@ h1 {
    margin: 0;
 }
 
+#map { height: 300px; }
+
+.my-div-icon {
+  width: 15px;
+  height: 20px;
+  background-color: black;
+}
+
 /* == GRID == */
 
 .murals {

@@ -7,6 +7,9 @@ import { renderMurals } from "./render.js";
 
 const API_URL = 'https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=-1';
 
+    
+
+      
 // HTML h1 Stripmuren Brussel Routeplanner en de sectie stripmuren
 
 const app = document.getElementById('app');
@@ -24,12 +27,25 @@ app.innerHTML = `
  <label for="search-murals"> Zoeken </label>
  <input id"search-murals" type="text" size="20">
  </section>
+  <div id="map"></div>
  <section id="murals" class="murals"></section>
  </main>
 `;
 
 // status 
 const statusElement = document.getElementById('status');
+
+
+let map = L.map('map').setView([50.8503396, 4.3517103], 13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+let markersLayer = L.layerGroup().addTo(map);
+
+let myIcon = L.divIcon({className: 'my-div-icon'});
+
 
 let allMurals = [];
 
@@ -56,6 +72,20 @@ function getMurals() {
         return newMurals;
       }
     
+}
+
+function renderMap(murals) {
+  //Leaflet toevoegen
+
+
+   markersLayer.clearLayers();
+  // alles markeren en tonen
+    for (let mural of murals)
+    {
+      console.log(mural.geo_point.lon + " - " + mural.geo_point.lat);
+      let marker = L.marker([mural.geo_point.lat, mural.geo_point.lon], {icon: myIcon}).addTo(markersLayer);
+      marker.bindPopup(mural.naam_fresco_nl).openPopup();
+    }
 }
 
 // favoriete stripmuren in localStorage
@@ -105,7 +135,8 @@ document.addEventListener('click', function (event) {
     }
     else {  renderMurals(getMurals(), favoriteMurals);
       statusElement.textContent = `Aantal ❤️ Favoriete ❤️ Stripmuren: ${getMurals().length}`}
-     
+  
+      renderMap(murals);
   });
 
 
@@ -116,11 +147,16 @@ document.addEventListener('click', function (event) {
 
   checkboxFilter.addEventListener('change', () => {
     renderMurals(getMurals(), favoriteMurals);
+   
+
+
     const filterFavo = document.getElementById('filter-favorites');
     if (!filterFavo || !filterFavo.checked) {
       statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`}
     else {
       statusElement.textContent = `Aantal ❤️ Favoriete ❤️ Stripmuren: ${getMurals().length}`}
+
+      renderMap(getMurals());
   });
 
 async function loadStripmuren(params) {
@@ -134,10 +170,17 @@ async function loadStripmuren(params) {
 
     renderMurals(getMurals(), favoriteMurals);
 
+
+
+
+    renderMap(getMurals());
+
     //resultaten in DOM tonen
     console.log(allMurals);
     console.log("favorieten: " + favoriteMurals);
     
+
+
   }
 
   catch (error) {
