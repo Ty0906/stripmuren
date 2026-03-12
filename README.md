@@ -86,4 +86,5 @@ Leaflet: basis opstelling: https://chatgpt.com/share/69b26476-1d48-800e-8cb1-ce3
     - geen resultaat: hulp gevraagd: lon/lat omgedraaid
     - geen resultaat: hulp gevraagd: icon was 0px = toegevoegd in css
     - gevraagd naar mogelijkheid om markers terug te resetten: LayerGroup toegevoegd
+    - tip fitBounds toegevoegd
 
