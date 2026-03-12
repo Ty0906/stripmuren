@@ -30,6 +30,7 @@ Dataset:
 - gemeente (FR)
 - wijk 
 - foto
+- meer info (link naar officiële website)
 
 ## 3. Implementatie van technische vereiste
 
@@ -41,6 +42,7 @@ Dataset:
     - template literals(truthly/falsy/..)
     - async/await
     - Local Storage
+    - externe link naar officiële website op elke stripmuur
 
 3. Data & API:
     - Fetch API
@@ -76,6 +78,12 @@ Documentatie uit de Canvas modules Web Advanced en Web Basic
 
 MDN (topic: Array)
 
+Leaflet: Quick Start + Documentation
+
 ### AI chatlog
 
+Leaflet: basis opstelling: https://chatgpt.com/share/69b26476-1d48-800e-8cb1-ce34506716d3
+    - geen resultaat: hulp gevraagd: lon/lat omgedraaid
+    - geen resultaat: hulp gevraagd: icon was 0px = toegevoegd in css
+    - gevraagd naar mogelijkheid om markers terug te resetten: LayerGroup toegevoegd
 
