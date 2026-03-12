@@ -86,6 +86,8 @@ function renderMap(murals) {
       let marker = L.marker([mural.geo_point.lat, mural.geo_point.lon], {icon: myIcon}).addTo(markersLayer);
       marker.bindPopup(mural.naam_fresco_nl).openPopup();
     }
+    let bounds = markersLayer.getBounds();
+    map.fitBounds(bounds);
 }
 
 // favoriete stripmuren in localStorage
