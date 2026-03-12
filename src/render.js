@@ -21,6 +21,7 @@ function createMuralHTML (mural, favoriteMurals) {
 
         const site = mural.link_site_striproute || "N/A";
 
+        
 
         let foto = null;
         if (mural.image) {
@@ -34,6 +35,8 @@ function createMuralHTML (mural, favoriteMurals) {
         else {
           fotoHTML = `<div class="no-image">Geen foto</div>`;
         }
+  
+
 
       // favoriet icoontje toevoegen
       const muralId = mural.image?.id;
@@ -47,6 +50,7 @@ function createMuralHTML (mural, favoriteMurals) {
       else {
         iconSymbol = "🤍";
       }
+
 
       //muur card toevoegen NL (nog uitbreiden met voorkeurtaal later)
 
@@ -63,7 +67,7 @@ function createMuralHTML (mural, favoriteMurals) {
             </div>
 
 
-          <div class="mural-body">
+          <div id="${muralId}" class="mural-body" data-id="${muralId}">
             <h2>${titelNL}</h2>
 
             <p><b>Tekenaar: </b> ${tekenaarNL}</p>
@@ -90,6 +94,10 @@ export function renderMurals(murals, favoriteMurals) {
     let html = "";
     for (let mural of murals) {
         html += createMuralHTML(mural, favoriteMurals);
+        
     }
     muralsContainer.innerHTML = html;
+
+   
+    
 }

@@ -87,4 +87,6 @@ Leaflet: basis opstelling: https://chatgpt.com/share/69b26476-1d48-800e-8cb1-ce3
     - geen resultaat: hulp gevraagd: icon was 0px = toegevoegd in css
     - gevraagd naar mogelijkheid om markers terug te resetten: LayerGroup toegevoegd
     - tip fitBounds toegevoegd
-
+Leaflet: leaflet popup bij event (gekozen voor click): https://chatgpt.com/share/69b2eb14-8b9c-800e-a1e5-ddcca6ad0cdb
+    - navraag hover event voor op map te tonen - gekozen voor toevoegen aan click
+    - hulp voor id ophalen tov marker leaflet
