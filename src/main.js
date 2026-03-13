@@ -23,18 +23,23 @@ app.innerHTML = `
  <p id="status">Data wordt geladen...</p>
  <section class="filters">
  <input id="filter-favorites" type="checkbox">
- <label for="filter-favorites">Toon enkel ❤️ Favoriete ❤️ Stripmuren </label>
+ <label for="filter-favorites">Toon enkel Favoriete Stripmuren ❤️ </label>
+
  <label for="search-murals"> Zoeken </label>
- <input id"search-murals" type="text" size="20">
+ <input id="search-murals" type="text" size="20">
+
+ <button id="calc-route" style="display:none;">Bereken route</button>
  </section>
   <div id="map"></div>
  <section id="murals" class="murals"></section>
+ <div id="route-map" style="display:none;"></div>
  </main>
 `;
 
 // status 
 const statusElement = document.getElementById('status');
 
+const calcRoute = document.getElementById('calc-route');
 
 let map = L.map('map').setView([50.8503396, 4.3517103], 13);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -42,7 +47,13 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-let markersLayer = L.layerGroup().addTo(map);
+let routeMap = L.map('route-map').setView([50.8503396, 4.3517103], 13);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(routeMap);
+
+let markersLayer = L.featureGroup().addTo(map);
 let muralMarkers = {};
 
 let myIcon = L.divIcon({ className: 'my-div-icon' });
@@ -93,8 +104,8 @@ function renderMap(murals) {
   }
 
   console.log("de marker keys", Object.keys(muralMarkers));
-  //let bounds = markersLayer.getBounds();
-  //map.fitBounds(bounds);
+  let bounds = markersLayer.getBounds();
+  map.fitBounds(bounds);
 }
 
 // favoriete stripmuren in localStorage
@@ -106,6 +117,11 @@ favoriteMurals = favoriteMurals.filter(id =>
   id !== "null");
 
 localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
+
+function distance(a, b) {
+  return map.distance(a, b);
+}
+
 
 // event 'click' om favoriete stripmuren aan te duiden
 // hierbij 'click' op stripmuurkaart voor popup op kaart 
@@ -142,10 +158,13 @@ document.addEventListener('click', function (event) {
     const filterFavo = document.getElementById('filter-favorites');
     if (!filterFavo || !filterFavo.checked) {
       statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`;
+      calcRoute.style.display = "none";
     }
     else {
       renderMurals(getMurals(), favoriteMurals);
-      statusElement.textContent = `Aantal ❤️ Favoriete ❤️ Stripmuren: ${getMurals().length}`
+      statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${getMurals().length}`;
+      calcRoute.style.display = "inline-block";
+
     }
 
     renderMap(murals);
@@ -162,10 +181,6 @@ document.addEventListener('click', function (event) {
 });
 
 
-
-
-
-
 //event 'change' om te weten wanneer checkbox is aangevinkt of is uitgevinkt
 
 const checkboxFilter = document.getElementById("filter-favorites");
@@ -177,14 +192,73 @@ checkboxFilter.addEventListener('change', () => {
 
   const filterFavo = document.getElementById('filter-favorites');
   if (!filterFavo || !filterFavo.checked) {
-    statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`
+    statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`;
+    calcRoute.style.display = "none";
+    document.getElementById("route-map").style.display = "none";
+    if (routingControl) {
+    routeMap.removeControl(routingControl);
+  }
+
   }
   else {
-    statusElement.textContent = `Aantal ❤️ Favoriete ❤️ Stripmuren: ${getMurals().length}`
+    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${getMurals().length}`;
+    calcRoute.style.display = "inline-block";
   }
 
   renderMap(getMurals());
 });
+
+// click event om routekaart toe te voegen met route = actieknop 'bereken route'
+
+let routingControl;
+
+calcRoute.addEventListener('click', () => {
+
+  //route-map zichtbaar maken
+  document.getElementById('route-map').style.display = "block";
+
+  setTimeout(() => {
+  routeMap.invalidateSize(); //Leaflet laten weten dat de kaart zichtbaar is en berekening nodig is voor Bounds
+}, 100);
+
+  const points = [];
+
+  for (let id of favoriteMurals) {
+    const marker = muralMarkers[id];
+
+
+    if (marker) {
+
+      const latLng = marker.getLatLng();
+
+      points.push(latLng);
+    }
+
+
+
+  }
+
+  if (points.length < 2) { alert('Je moet minstens 2 favoriete stripmuren hebben om een route te berekenen!') }
+  
+
+  if (routingControl) {
+    routeMap.removeControl(routingControl);
+  }
+
+  routingControl = L.Routing.control({
+    waypoints: points,
+    routeWhileDragging: false,
+    optimizeWaypoints: true,
+    reorderWaypoints: true
+  }).addTo(routeMap);
+
+  routingControl.on('routesfound', function(e) {
+  const route = e.routes[0];
+  routeMap.fitBounds(L.polyline(route.coordinates).getBounds());
+
+});
+
+})
 
 async function loadStripmuren(params) {
 

@@ -90,3 +90,12 @@ Leaflet: basis opstelling: https://chatgpt.com/share/69b26476-1d48-800e-8cb1-ce3
 Leaflet: leaflet popup bij event (gekozen voor click): https://chatgpt.com/share/69b2eb14-8b9c-800e-a1e5-ddcca6ad0cdb
     - navraag hover event voor op map te tonen - gekozen voor toevoegen aan click
     - hulp voor id ophalen tov marker leaflet
+Leaflet Routing Machine: https://chatgpt.com/share/69b43350-2b00-800e-ac10-ab6da021aaf3
+    - navraag trage response: defer toegevoegd aan scripts
+    - routing control toegevoegd om tragere kaart te vermijden
+    - kortste route opties: standaard opties optimizeWaypoints: true en recorderWaypoints: true toegevoegd
+    - routekaart automatisch laten inzoomen op route: fitBounds toegevoegd
+    - tweede kaart aangemaakt maar dit zorgde voor geen Bounds meer 
+        (oorzaak kaart nog niet opgebouwd, display none tot aan actie 'bereken route'):       
+            invalidateSize met Timeout toegevoegd zodat fitBounds weer goedkwam
+    - fitBounds werkende gekregen op Leaflet kaart: featureGroup() ipv layerGroup()
