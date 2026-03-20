@@ -59,9 +59,41 @@ h1 {
 
 #map { height: 300px; }
 
+#favorites-layout {
+  display: block;
+}
+
+#favorites-layout.favorites-checked {
+  display: grid;
+  grid-template-columns: 1fr 900px;
+  gap: 30px;
+  align-items: start;
+}
+
 #route-map {
   width: 100%;
-  height: 400px;
+  min-height: 600px;
+  
+  border: 2px solid white;
+  border-radius: 10px;
+}
+
+ .leaflet-routing-alt {
+  
+  color: black;
+   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+}
+
+.leaflet-routing-alt h2 {
+  color: black;
+  font-size: 11px !important;
+  font-weight: normal;
+  
+}
+
+.leaflet-routing-alt tr:hover * {
+  
+  background-color: rgb(247, 90, 137);
 }
 
 .my-div-icon {

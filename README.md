@@ -98,4 +98,11 @@ Leaflet Routing Machine: https://chatgpt.com/share/69b43350-2b00-800e-ac10-ab6da
     - tweede kaart aangemaakt maar dit zorgde voor geen Bounds meer 
         (oorzaak kaart nog niet opgebouwd, display none tot aan actie 'bereken route'):       
             invalidateSize met Timeout toegevoegd zodat fitBounds weer goedkwam
-    - fitBounds werkende gekregen op Leaflet kaart: featureGroup() ipv layerGroup()
+    - fitBounds werkende gekregen op Leaflet kaart: featureGroup() ipv layerGroup()  
+Leaflet Routing Machine: https://chatgpt.com/share/69bd6b48-da68-800e-a723-a77ff05ac280
+    - navraag classes/id's van LRM voor css verbetering: tekst van instructiepaneel was wit op witte achtergrond
+    - navraag mogelijkheid vertalen naar NL: 
+        na veel opzoekwerk (en verkeerde info van chat over localization) gevonden dat localization.js niet meer wordt gebruikt: (hier gevonden: [src/localization.js](https://github.com/perliedman/leaflet-routing-machine/blob/master/src/localization.js))
+        ==> samen met chatgpt dan maar eigen formatter gemaakt met NL vertalingen gebaseerd op localization.js
+
+

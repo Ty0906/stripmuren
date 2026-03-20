@@ -22,17 +22,19 @@ app.innerHTML = `
  <h1>Stripmuren Brussel Routeplanner</h1>
  <p id="status">Data wordt geladen...</p>
  <section class="filters">
- <input id="filter-favorites" type="checkbox">
- <label for="filter-favorites">Toon enkel Favoriete Stripmuren ❤️ </label>
+  <input id="filter-favorites" type="checkbox">
+  <label for="filter-favorites">Toon enkel Favoriete Stripmuren ❤️ </label>
 
- <label for="search-murals"> Zoeken </label>
- <input id="search-murals" type="text" size="20">
+  <label for="search-murals"> Zoeken </label>
+  <input id="search-murals" type="text" size="20">
 
- <button id="calc-route" style="display:none;">Bereken route</button>
+  <button id="calc-route" style="display:none;">Bereken route</button>
  </section>
   <div id="map"></div>
- <section id="murals" class="murals"></section>
- <div id="route-map" style="display:none;"></div>
+ <div id="favorites-layout"> 
+  <section id="murals" class="murals"></section>
+  <div id="route-map" style="display:none;"></div>
+ </div>
  </main>
 `;
 
@@ -40,6 +42,8 @@ app.innerHTML = `
 const statusElement = document.getElementById('status');
 
 const calcRoute = document.getElementById('calc-route');
+
+const layout = document.getElementById('favorites-layout');
 
 let map = L.map('map').setView([50.8503396, 4.3517103], 13);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -60,6 +64,7 @@ let myIcon = L.divIcon({ className: 'my-div-icon' });
 
 
 let allMurals = [];
+
 
 function getMurals() {
   const filterFavo = document.getElementById('filter-favorites');
@@ -118,9 +123,6 @@ favoriteMurals = favoriteMurals.filter(id =>
 
 localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
 
-function distance(a, b) {
-  return map.distance(a, b);
-}
 
 
 // event 'click' om favoriete stripmuren aan te duiden
@@ -158,11 +160,13 @@ document.addEventListener('click', function (event) {
     const filterFavo = document.getElementById('filter-favorites');
     if (!filterFavo || !filterFavo.checked) {
       statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`;
+      layout.classList.remove("favorites-checked");
       calcRoute.style.display = "none";
     }
     else {
       renderMurals(getMurals(), favoriteMurals);
       statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${getMurals().length}`;
+      layout.classList.add("favorites-checked");
       calcRoute.style.display = "inline-block";
 
     }
@@ -193,6 +197,7 @@ checkboxFilter.addEventListener('change', () => {
   const filterFavo = document.getElementById('filter-favorites');
   if (!filterFavo || !filterFavo.checked) {
     statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`;
+    layout.classList.remove("favorites-checked");
     calcRoute.style.display = "none";
     document.getElementById("route-map").style.display = "none";
     if (routingControl) {
@@ -202,6 +207,7 @@ checkboxFilter.addEventListener('change', () => {
   }
   else {
     statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${getMurals().length}`;
+    layout.classList.add("favorites-checked");
     calcRoute.style.display = "inline-block";
   }
 
@@ -238,21 +244,133 @@ calcRoute.addEventListener('click', () => {
 
   }
 
-  if (points.length < 2) { alert('Je moet minstens 2 favoriete stripmuren hebben om een route te berekenen!') }
+  if (points.length < 2) { alert("Je moet minstens 2 favoriete stripmuren hebben om een route te berekenen!") }
   
 
   if (routingControl) {
     routeMap.removeControl(routingControl);
   }
 
+
+  /*
+  L.Routing.Formatter.prototype.formatInstruction = function(instr) {
+     console.log(instr.type);
+    switch(instr.type) {
+        case 'Head': return 'Ga';
+        case 'Straight': return 'Ga rechtdoor';
+        case 'SlightRight': return 'Houd rechts aan';
+        case 'Right': return 'Sla rechtsaf';
+        case 'SharpRight': return 'Sla scherp rechtsaf';
+        case 'TurnAround': return 'Keer om';
+        case 'SharpLeft': return 'Sla scherp linksaf';
+        case 'Left': return 'Sla linksaf';
+        case 'SlightLeft': return 'Houd links aan';
+        case 'WaypointReached': return 'Bestemming bereikt';
+        case 'Roundabout': return 'Neem de rotonde';
+        default: return instr.text; // fallback
+    }
+};*/
+
+
+const formatterNL = new L.Routing.Formatter({
+    language: 'nl' 
+});
+
+formatterNL.formatInstruction = function(instr) {
+    let text = '';
+
+    switch(instr.type) {
+        case 'Head':
+            text = 'Vertrek';
+            if (instr.dir) text += ' richting ' + vertaalRichtingNL(instr.dir);
+            break;
+
+        case 'Straight':
+        case 'Continue':
+            text = 'Ga rechtdoor';
+            break;
+
+        case 'Right':
+            text = 'Sla rechtsaf';
+            break;
+
+        case 'Left':
+            text = 'Sla linksaf';
+            break;
+
+        case 'SlightRight':
+            text = 'Houd rechts aan';
+            break;
+
+        case 'SlightLeft':
+            text = 'Houd links aan';
+            break;
+
+        case 'SharpRight':
+            text = 'Sla scherp rechtsaf';
+            break;
+
+        case 'SharpLeft':
+            text = 'Sla scherp linksaf';
+            break;
+
+        case 'TurnAround':
+            text = 'Keer om';
+            break;
+
+        case 'Roundabout':
+            text = 'Neem de rotonde';
+            break;
+
+        case 'WaypointReached':
+            text = 'Tussenpunt bereikt';
+            break;
+
+        case 'DestinationReached':
+            text = 'Bestemming bereikt';
+            break;
+
+        default:
+            return instr.text; // fallback
+    }
+
+    // 👉 straatnaam toevoegen
+    if (instr.road) {
+        text += ' op ' + instr.road;
+    }
+
+    return text;
+};
+
+function vertaalRichtingNL(dir) {
+    const map = {
+        N: 'noord',
+        NE: 'noordoost',
+        E: 'oost',
+        SE: 'zuidoost',
+        S: 'zuid',
+        SW: 'zuidwest',
+        W: 'west',
+        NW: 'noordwest'
+    };
+    return map[dir] || dir;
+}
+
   routingControl = L.Routing.control({
     waypoints: points,
+    router: L.Routing.osrmv1({
+        serviceUrl: "https://routing.openstreetmap.de/routed-foot/route/v1",
+        profile: "foot"
+    }),
+    formatter: formatterNL,
+    
     routeWhileDragging: false,
     optimizeWaypoints: true,
     reorderWaypoints: true
   }).addTo(routeMap);
 
-  routingControl.on('routesfound', function(e) {
+    
+  routingControl.on("routesfound", function(e) {
   const route = e.routes[0];
   routeMap.fitBounds(L.polyline(route.coordinates).getBounds());
 
