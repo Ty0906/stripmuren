@@ -104,5 +104,9 @@ Leaflet Routing Machine: https://chatgpt.com/share/69bd6b48-da68-800e-a723-a77ff
     - navraag mogelijkheid vertalen naar NL: 
         na veel opzoekwerk (en verkeerde info van chat over localization) gevonden dat localization.js niet meer wordt gebruikt: (hier gevonden: [src/localization.js](https://github.com/perliedman/leaflet-routing-machine/blob/master/src/localization.js))
         ==> samen met chatgpt dan maar eigen formatter gemaakt met NL vertalingen gebaseerd op localization.js
-
+Sortering toegevoegd: https://chatgpt.com/share/69c2aaa3-83f4-800e-a327-ffd7f6caf57c 
+    - array sort op MDM gevonden - deze toegepast en dan laten checken 
+    - suggesties voor localCompare gebruik gekregen - opgezocht op MDM en overgenomen van MDM, daarna laten checken
+    - kleine verbetersuggesties overgenomen (opties bij localCompare toegevoegd & conditie gewijzigd
+    - suggestie: array = [... array] toegepast voor bugs te voorkomen - navraag gedaan waarom dit beter is
 

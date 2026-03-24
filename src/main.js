@@ -28,6 +28,13 @@ app.innerHTML = `
   <label for="search-murals"> Zoeken </label>
   <input id="search-murals" type="text" size="20">
 
+  <label for="sort-murals"> Sorteren op: </label>
+  <select id="sort-murals">
+    <option value="">  </option>
+    <option value="titel">Titel</option>
+    <option value="tekenaar">Tekenaar</option>
+  </select>
+
   <button id="calc-route" style="display:none;">Bereken route</button>
  </section>
   <div id="map"></div>
@@ -60,20 +67,27 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let markersLayer = L.featureGroup().addTo(map);
 let muralMarkers = {};
 
-let myIcon = L.divIcon({ className: 'my-div-icon' });
+let myIcon = L.divIcon({ className: "my-div-icon" });
 
 
 let allMurals = [];
 
 
 function getMurals() {
-  const filterFavo = document.getElementById('filter-favorites');
-  if (!filterFavo || !filterFavo.checked) {
+
+  const filterFavo = document.getElementById("filter-favorites");
+  const sortOption = document.getElementById("sort-murals");
+
+  let sortResult = [...allMurals];
+  let newMurals = [];
+
+  /* if (!filterFavo || !filterFavo.checked) {
     return allMurals;
   }
-  else {
-    let newMurals = [];
+  else */
 
+    if (filterFavo && filterFavo.checked)  {
+    
     for (let fm of allMurals) {
       let muralImageId = fm?.image?.id;
       if (!muralImageId) continue;
@@ -84,8 +98,27 @@ function getMurals() {
 
       }
     }
-    return newMurals;
+    //return newMurals;
   }
+
+  if (filterFavo && filterFavo.checked) {
+    sortResult = [...newMurals];
+  }
+  
+  const sortValue = sortOption.value;
+  
+
+  if (sortValue == "titel") {
+    sortResult.sort((a,b) => (a.naam_fresco_nl || "").localeCompare(b.naam_fresco_nl || "", 'nl', { sensitivity: 'base' })
+  );
+  }
+
+  if (sortValue == "tekenaar") {
+     sortResult.sort((a,b) => (a.dessinateur || "").localeCompare(b.dessinateur || "", 'nl', { sensitivity: 'base' })
+    );
+  }
+
+  return sortResult;
 
 }
 
@@ -175,6 +208,16 @@ document.addEventListener('click', function (event) {
 
     return;
   }
+
+  //sortering "change" event
+
+  const sortOption = document.getElementById("sort-murals");
+
+  sortOption.addEventListener("change", () => {
+
+    renderMurals(getMurals(), favoriteMurals);
+    renderMap(getMurals());
+  })
 
   // bij click ook toevoegen: stripmuur op map te zien
 
