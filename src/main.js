@@ -383,9 +383,11 @@ async function loadStripmuren(params) {
   try {
     const murals = await fetchMurals();
 
-    allMurals = murals;
+    const muralsWithPhoto = murals.filter(m => m.image && m.image.url); //stripmuren zonder foto zijn niet mooi dus eruit
 
-    statusElement.textContent = `Totaal Aantal stripmuren: ${murals.length}`;
+    allMurals = muralsWithPhoto;
+
+    statusElement.textContent = `Totaal Aantal stripmuren: ${muralsWithPhoto.length}`;
 
     renderMurals(getMurals(), favoriteMurals);
 

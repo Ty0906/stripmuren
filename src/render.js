@@ -2,7 +2,7 @@
 
 function createMuralHTML (mural, favoriteMurals) {
 
-          //gekozen velden met Truthly en Falsy waarden en nullish coalescing operator ??
+      //gekozen velden met Truthly en Falsy waarden en nullish coalescing operator ??
       //NL en FR tonen ophalen
         const titelNL = mural.naam_fresco_nl || "Titel onbekend (NL)";
         const titelFR = mural.nom_de_la_fresque || "Titre inconnu (FR)";
@@ -23,18 +23,10 @@ function createMuralHTML (mural, favoriteMurals) {
 
         
 
-        let foto = null;
-        if (mural.image) {
-          foto = mural.image.url ?? null;
-        }
-
-        let fotoHTML;
-        if (foto) {
-          fotoHTML = `<img src="${foto}" alt="${titelNL}">`;
-        }
-        else {
-          fotoHTML = `<div class="no-image">Geen foto</div>`;
-        }
+        const foto = mural.image.url;
+       
+        const fotoHTML = `<img src="${foto}" alt="${titelNL}">`;
+      
   
 
 
