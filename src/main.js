@@ -171,7 +171,7 @@ document.addEventListener('click', function (event) {
 
     }
 
-    renderMap(murals);
+    renderMap(getMurals());
 
     return;
   }
