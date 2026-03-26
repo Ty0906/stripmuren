@@ -24,7 +24,7 @@ app.innerHTML = `
  <section class="filters">
   <input id="filter-favorites" type="checkbox">
   <label for="filter-favorites">Toon enkel Favoriete Stripmuren ❤️ </label>
-
+  
   <label for="search-murals"> Zoeken </label>
   <input id="search-murals" type="text" size="20">
 
@@ -45,12 +45,19 @@ app.innerHTML = `
  </main>
 `;
 
-// status 
+// HTML elementen
+
 const statusElement = document.getElementById('status');
+const searchInputElement = document.getElementById("search-murals");
+console.log(searchInputElement);
+const sortOption = document.getElementById("sort-murals");
+const filterFavo = document.getElementById("filter-favorites");
 
 const calcRoute = document.getElementById('calc-route');
 
 const layout = document.getElementById('favorites-layout');
+
+// MAP (LeafletMap/LeafletRouteMap) variabelen
 
 let map = L.map('map').setView([50.8503396, 4.3517103], 13);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -75,8 +82,9 @@ let allMurals = [];
 
 function getMurals() {
 
-  const filterFavo = document.getElementById("filter-favorites");
-  const sortOption = document.getElementById("sort-murals");
+
+  let searchInput = searchInputElement.value;
+  searchInput = searchInput.toLowerCase();
 
   let sortResult = [...allMurals];
   let newMurals = [];
@@ -86,8 +94,8 @@ function getMurals() {
   }
   else */
 
-    if (filterFavo && filterFavo.checked)  {
-    
+  if (filterFavo && filterFavo.checked) {
+
     for (let fm of allMurals) {
       let muralImageId = fm?.image?.id;
       if (!muralImageId) continue;
@@ -98,23 +106,34 @@ function getMurals() {
 
       }
     }
-    //return newMurals;
-  }
-
-  if (filterFavo && filterFavo.checked) {
     sortResult = [...newMurals];
   }
-  
+
+
+
+  if (searchInput.length > 0) {
+    let searchResult = [];
+
+    for (let mural of sortResult) {
+      let json = JSON.stringify(mural).toLowerCase();
+      if (json.includes(searchInput)) {
+        searchResult.push(mural);
+      }
+    }
+
+    sortResult = searchResult;
+  }
+
   const sortValue = sortOption.value;
-  
+
 
   if (sortValue == "titel") {
-    sortResult.sort((a,b) => (a.naam_fresco_nl || "").localeCompare(b.naam_fresco_nl || "", 'nl', { sensitivity: 'base' })
-  );
+    sortResult.sort((a, b) => (a.naam_fresco_nl || "").localeCompare(b.naam_fresco_nl || "", 'nl', { sensitivity: 'base' })
+    );
   }
 
   if (sortValue == "tekenaar") {
-     sortResult.sort((a,b) => (a.dessinateur || "").localeCompare(b.dessinateur || "", 'nl', { sensitivity: 'base' })
+    sortResult.sort((a, b) => (a.dessinateur || "").localeCompare(b.dessinateur || "", 'nl', { sensitivity: 'base' })
     );
   }
 
@@ -157,9 +176,62 @@ favoriteMurals = favoriteMurals.filter(id =>
 localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
 
 
+//EVENTS
 
-// event 'click' om favoriete stripmuren aan te duiden
-// hierbij 'click' op stripmuurkaart voor popup op kaart 
+
+// Event listener voor ZOEKEN (input)
+
+searchInputElement.addEventListener("input", () => {
+  const murals = getMurals();
+  renderMurals(murals, favoriteMurals);
+  renderMap(murals);
+
+  if (!filterFavo || !filterFavo.checked) {
+    statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
+  }
+  else {
+    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
+  }
+});
+
+// Event listener voor SORTEREN (change)
+
+sortOption.addEventListener("change", () => {
+  const murals = getMurals();
+  renderMurals(murals, favoriteMurals);
+  renderMap(murals);
+})
+
+// Event listener voor FILTER FAVORIETEN (change)
+
+filterFavo.addEventListener('change', () => {
+
+  const murals = getMurals();
+  renderMurals(murals, favoriteMurals);
+
+
+  if (!filterFavo || !filterFavo.checked) {
+    statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
+    layout.classList.remove("favorites-checked");
+    calcRoute.style.display = "none";
+    document.getElementById("route-map").style.display = "none";
+
+    if (routingControl) {
+      routeMap.removeControl(routingControl);
+    }
+
+  }
+  else {
+    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
+    layout.classList.add("favorites-checked");
+    calcRoute.style.display = "inline-block";
+  }
+
+  renderMap(murals);
+});
+
+// Event listener voor AANPASSEN FAVORIETEN + POPUP KAART
+
 
 document.addEventListener('click', function (event) {
 
@@ -190,7 +262,7 @@ document.addEventListener('click', function (event) {
 
     console.log("favorieten: " + favoriteMurals);
 
-    const filterFavo = document.getElementById('filter-favorites');
+
     if (!filterFavo || !filterFavo.checked) {
       statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`;
       layout.classList.remove("favorites-checked");
@@ -209,17 +281,8 @@ document.addEventListener('click', function (event) {
     return;
   }
 
-  //sortering "change" event
 
-  const sortOption = document.getElementById("sort-murals");
-
-  sortOption.addEventListener("change", () => {
-
-    renderMurals(getMurals(), favoriteMurals);
-    renderMap(getMurals());
-  })
-
-  // bij click ook toevoegen: stripmuur op map te zien
+  // Popup openen (tonen op kaart) bij klik
 
   const muralCard = event.target.closest('.mural-body');
   if (!muralCard) return;
@@ -228,36 +291,7 @@ document.addEventListener('click', function (event) {
 });
 
 
-//event 'change' om te weten wanneer checkbox is aangevinkt of is uitgevinkt
-
-const checkboxFilter = document.getElementById("filter-favorites");
-
-checkboxFilter.addEventListener('change', () => {
-  renderMurals(getMurals(), favoriteMurals);
-
-
-
-  const filterFavo = document.getElementById('filter-favorites');
-  if (!filterFavo || !filterFavo.checked) {
-    statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`;
-    layout.classList.remove("favorites-checked");
-    calcRoute.style.display = "none";
-    document.getElementById("route-map").style.display = "none";
-    if (routingControl) {
-    routeMap.removeControl(routingControl);
-  }
-
-  }
-  else {
-    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${getMurals().length}`;
-    layout.classList.add("favorites-checked");
-    calcRoute.style.display = "inline-block";
-  }
-
-  renderMap(getMurals());
-});
-
-// click event om routekaart toe te voegen met route = actieknop 'bereken route'
+// Eventlistener actieknop 'bereken route' (click)
 
 let routingControl;
 
@@ -267,8 +301,8 @@ calcRoute.addEventListener('click', () => {
   document.getElementById('route-map').style.display = "block";
 
   setTimeout(() => {
-  routeMap.invalidateSize(); //Leaflet laten weten dat de kaart zichtbaar is en berekening nodig is voor Bounds
-}, 100);
+    routeMap.invalidateSize(); //Leaflet laten weten dat de kaart zichtbaar is en berekening nodig is voor Bounds
+  }, 100);
 
   const points = [];
 
@@ -288,138 +322,119 @@ calcRoute.addEventListener('click', () => {
   }
 
   if (points.length < 2) { alert("Je moet minstens 2 favoriete stripmuren hebben om een route te berekenen!") }
-  
+
 
   if (routingControl) {
     routeMap.removeControl(routingControl);
   }
 
 
-  /*
-  L.Routing.Formatter.prototype.formatInstruction = function(instr) {
-     console.log(instr.type);
-    switch(instr.type) {
-        case 'Head': return 'Ga';
-        case 'Straight': return 'Ga rechtdoor';
-        case 'SlightRight': return 'Houd rechts aan';
-        case 'Right': return 'Sla rechtsaf';
-        case 'SharpRight': return 'Sla scherp rechtsaf';
-        case 'TurnAround': return 'Keer om';
-        case 'SharpLeft': return 'Sla scherp linksaf';
-        case 'Left': return 'Sla linksaf';
-        case 'SlightLeft': return 'Houd links aan';
-        case 'WaypointReached': return 'Bestemming bereikt';
-        case 'Roundabout': return 'Neem de rotonde';
-        default: return instr.text; // fallback
-    }
-};*/
+  const formatterNL = new L.Routing.Formatter({
+    language: 'nl'
+  });
 
-
-const formatterNL = new L.Routing.Formatter({
-    language: 'nl' 
-});
-
-formatterNL.formatInstruction = function(instr) {
+  formatterNL.formatInstruction = function (instr) {
     let text = '';
 
-    switch(instr.type) {
-        case 'Head':
-            text = 'Vertrek';
-            if (instr.dir) text += ' richting ' + vertaalRichtingNL(instr.dir);
-            break;
+    switch (instr.type) {
+      case 'Head':
+        text = 'Vertrek';
+        if (instr.dir) text += ' richting ' + vertaalRichtingNL(instr.dir);
+        break;
 
-        case 'Straight':
-        case 'Continue':
-            text = 'Ga rechtdoor';
-            break;
+      case 'Straight':
+      case 'Continue':
+        text = 'Ga rechtdoor';
+        break;
 
-        case 'Right':
-            text = 'Sla rechtsaf';
-            break;
+      case 'Right':
+        text = 'Sla rechtsaf';
+        break;
 
-        case 'Left':
-            text = 'Sla linksaf';
-            break;
+      case 'Left':
+        text = 'Sla linksaf';
+        break;
 
-        case 'SlightRight':
-            text = 'Houd rechts aan';
-            break;
+      case 'SlightRight':
+        text = 'Houd rechts aan';
+        break;
 
-        case 'SlightLeft':
-            text = 'Houd links aan';
-            break;
+      case 'SlightLeft':
+        text = 'Houd links aan';
+        break;
 
-        case 'SharpRight':
-            text = 'Sla scherp rechtsaf';
-            break;
+      case 'SharpRight':
+        text = 'Sla scherp rechtsaf';
+        break;
 
-        case 'SharpLeft':
-            text = 'Sla scherp linksaf';
-            break;
+      case 'SharpLeft':
+        text = 'Sla scherp linksaf';
+        break;
 
-        case 'TurnAround':
-            text = 'Keer om';
-            break;
+      case 'TurnAround':
+        text = 'Keer om';
+        break;
 
-        case 'Roundabout':
-            text = 'Neem de rotonde';
-            break;
+      case 'Roundabout':
+        text = 'Neem de rotonde';
+        break;
 
-        case 'WaypointReached':
-            text = 'Tussenpunt bereikt';
-            break;
+      case 'WaypointReached':
+        text = 'Tussenpunt bereikt';
+        break;
 
-        case 'DestinationReached':
-            text = 'Bestemming bereikt';
-            break;
+      case 'DestinationReached':
+        text = 'Bestemming bereikt';
+        break;
 
-        default:
-            return instr.text; // fallback
+      default:
+        return instr.text; // fallback
     }
 
     // 👉 straatnaam toevoegen
     if (instr.road) {
-        text += ' op ' + instr.road;
+      text += ' op ' + instr.road;
     }
 
     return text;
-};
+  };
 
-function vertaalRichtingNL(dir) {
+  function vertaalRichtingNL(dir) {
     const map = {
-        N: 'noord',
-        NE: 'noordoost',
-        E: 'oost',
-        SE: 'zuidoost',
-        S: 'zuid',
-        SW: 'zuidwest',
-        W: 'west',
-        NW: 'noordwest'
+      N: 'noord',
+      NE: 'noordoost',
+      E: 'oost',
+      SE: 'zuidoost',
+      S: 'zuid',
+      SW: 'zuidwest',
+      W: 'west',
+      NW: 'noordwest'
     };
     return map[dir] || dir;
-}
+  }
 
   routingControl = L.Routing.control({
     waypoints: points,
     router: L.Routing.osrmv1({
-        serviceUrl: "https://routing.openstreetmap.de/routed-foot/route/v1",
-        profile: "foot"
+      serviceUrl: "https://routing.openstreetmap.de/routed-foot/route/v1",
+      profile: "foot"
     }),
     formatter: formatterNL,
-    
+
     routeWhileDragging: false,
     optimizeWaypoints: true,
     reorderWaypoints: true
   }).addTo(routeMap);
 
-    
-  routingControl.on("routesfound", function(e) {
-  const route = e.routes[0];
-  routeMap.fitBounds(L.polyline(route.coordinates).getBounds());
 
+  routingControl.on("routesfound", function (e) {
+    const route = e.routes[0];
+    routeMap.fitBounds(L.polyline(route.coordinates).getBounds());
+
+  });
 });
 
-})
+
 
 async function loadStripmuren(params) {
 
@@ -434,17 +449,11 @@ async function loadStripmuren(params) {
 
     renderMurals(getMurals(), favoriteMurals);
 
-
-
-
     renderMap(getMurals());
 
     //resultaten in DOM tonen
     console.log(allMurals);
     console.log("favorieten: " + favoriteMurals);
-
-
-
 
   }
 
