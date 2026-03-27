@@ -4,23 +4,23 @@ function createMuralHTML (mural, favoriteMurals) {
 
         const lang = localStorage.getItem("preferredLanguage") || "NL";
 
-      //gekozen velden met Truthly en Falsy waarden en nullish coalescing operator ??
-      //NL en FR tonen ophalen
-    
+        const isNL = (lang === "NL");
+        
         const titelNL = mural.naam_fresco_nl || "Titel onbekend (NL)";
         const titelFR = mural.nom_de_la_fresque || "Titre inconnu (FR)";
+        const titel = isNL ? titelNL : titelFR;
 
         const tekenaarNL = mural.dessinateur || "Tekenaar onbekend";
         const tekenaarFR = mural.dessinateur || "Dessinateur inconnu"
+        const tekenaar = isNL? tekenaarNL : tekenaarFR;
 
         const adresNL = mural.adres_nl || "Adres onbekend (NL)";
         const adresFR = mural.adresse_fr ||"Adresse inconnu (FR)"
+        const adres = isNL? adresNL : adresFR;
 
         const gemeenteNL = mural.gemeente ||"Gemeente onbekend (NL)";
         const gemeenteFR = mural.commune || "Commune inconnu (FR)";
-
-        const wijkNL = mural.quartier || "Wijk onbekend (NL)";
-        const wijkFR = mural.quartier || "Quartier inconnu (FR)"
+        const gemeente = isNL? gemeenteNL : gemeenteFR;
 
         const site = mural.link_site_striproute || "N/A";
 
@@ -30,25 +30,24 @@ function createMuralHTML (mural, favoriteMurals) {
        
         const fotoHTML = `<img src="${foto}" alt="${titelNL}">`;
       
+        const omschrTekenaar = isNL? "Tekenaar" : "Dessinateur";
+        const omschrAdres = isNL? "Adres" : "Adresse";
+        const omschrGemeente = isNL? "Gemeente" : "Commune";
+
+        const omschrSite = isNL? "meer info" : "plus d'infos";
   
 
 
       // favoriet icoontje toevoegen
       const muralId = mural.image?.id;
       const isFavorite = favoriteMurals.includes(muralId);
-      let iconType = isFavorite ? "favorite" : "not-favorite";
       
-      let iconSymbol ="";
-      if (iconType == "favorite") {
-        iconSymbol = "❤️";
-      }
-      else {
-        iconSymbol = "🤍";
-      }
+      
+      const iconSymbol = isFavorite ? "❤️" : "🤍";
+     
 
-
-      //muur card toevoegen NL 
-      if (lang == "NL") {
+      //muur card toevoegen  
+     
       return `
         <article class="mural-card">
 
@@ -63,15 +62,15 @@ function createMuralHTML (mural, favoriteMurals) {
 
 
           <div id="${muralId}" class="mural-body" data-id="${muralId}">
-            <h2>${titelNL}</h2>
+            <h2>${titel}</h2>
 
-            <p><b>Tekenaar: </b> ${tekenaarNL}</p>
+            <p><b>${omschrTekenaar}: </b> ${tekenaar}</p>
           
-            <p><b>Adres: </b> ${adresNL}</p>
+            <p><b>${omschrAdres}: </b> ${adres}</p>
 
-            <p><b>Gemeente: </b> ${gemeenteNL}</p>
+            <p><b>${omschrGemeente}: </b> ${gemeente}</p>
 
-            <a href="${site}" class="site" target="_blank"> meer info </a>
+            <a href="${site}" class="site" target="_blank"> ${omschrSite} </a>
           </div>
             <footer class="mural-footer">
                 <button type="button" class="favorite-mural" data-id="${muralId}">${iconSymbol}</button>
@@ -79,39 +78,7 @@ function createMuralHTML (mural, favoriteMurals) {
           
        </article>
       `
-      }
-      else {
-        return `
-        <article class="mural-card">
-
-          
-
-          <div class="mural-img">${fotoHTML}</div>
-
-          
-            <div class="mural-preview">
-            ${fotoHTML}
-            </div>
-
-
-          <div id="${muralId}" class="mural-body" data-id="${muralId}">
-            <h2>${titelFR}</h2>
-
-            <p><b>Dessinateur: </b> ${tekenaarFR}</p>
-          
-            <p><b>Adresse: </b> ${adresFR}</p>
-
-            <p><b>Commune: </b> ${gemeenteFR}</p>
-
-            <a href="${site}" class="site" target="_blank"> plus d'infos </a>
-          </div>
-            <footer class="mural-footer">
-                <button type="button" class="favorite-mural" data-id="${muralId}">${iconSymbol}</button>
-            </footer>
-          
-       </article>
-      `
-      }
+      
 }
 
 export function renderMurals(murals, favoriteMurals) {

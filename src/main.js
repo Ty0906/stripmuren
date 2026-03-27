@@ -251,7 +251,7 @@ filterFavo.addEventListener('change', () => {
     statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
     }
     else {
-      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
+      statusElement.textContent = `Nombre de Fresques Favorites ❤️: ${murals.length}`;
     }
     layout.classList.add("favorites-checked");
     calcRoute.style.display = "inline-block";
@@ -292,10 +292,10 @@ document.addEventListener('click', function (event) {
 
     console.log("favorieten: " + favoriteMurals);
 
-
+    let murals = getMurals();
     if (!filterFavo || !filterFavo.checked) {
       if (currentLang == "NL") {
-    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
+    statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
     }
     else {
       statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
@@ -310,7 +310,7 @@ document.addEventListener('click', function (event) {
     statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
     }
     else {
-      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
+      statusElement.textContent = `Nombre de Fresques Favorites ❤️: ${murals.length}`;
     }
       
       layout.classList.add("favorites-checked");
@@ -488,7 +488,7 @@ async function loadStripmuren(params) {
     allMurals = muralsWithPhoto;
 
     if (currentLang == "NL") {
-    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${muralsWithPhoto.length}`;
+    statusElement.textContent = `Totaal Aantal Stripmuren: ${muralsWithPhoto.length}`;
     }
     else {
       statusElement.textContent = `Nombre Total de Fresques: ${muralsWithPhoto.length}`;
