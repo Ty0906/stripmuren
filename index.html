@@ -12,7 +12,36 @@
      <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
   </head>
   <body>
-    <div id="app"></div>
+    
+    <main class="page">
+      <div id="language-container">
+        <button id="NL" class="language">NL</button>
+        <button id="FR" class="language">FR</button>
+      </div>
+
+      <h1>Stripmuren Brussel Routeplanner</h1>
+      <p id="status">Data wordt geladen...</p>
+      <section class="filters">
+        <input id="filter-favorites" type="checkbox">
+        <label for="filter-favorites">Toon enkel Favoriete Stripmuren ❤️ </label>
+
+        <label for="search-murals"> Zoeken </label>
+        <input id="search-murals" type="text" size="20">
+        <label for="sort-murals">Sorteren op:</label>
+        <select id="sort-murals">
+          <option value=""></option>
+          <option value="titel">Titel</option>
+          <option value="tekenaar">Tekenaar</option>
+        </select>
+
+        <button id="calc-route" style="display: none;">Bereken route</button>
+      </section>
+      <div id="map"></div>
+      <div id="favorites-layout">
+        <section id="murals" class="murals"></section>
+        <div id="route-map" style="display: none;"></div>
+      </div>
+    </main>
      
     <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -25,3 +54,7 @@
      
   </body>
 </html>
+
+
+
+
