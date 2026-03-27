@@ -2,8 +2,11 @@
 
 function createMuralHTML (mural, favoriteMurals) {
 
+        const lang = localStorage.getItem("preferredLanguage") || "NL";
+
       //gekozen velden met Truthly en Falsy waarden en nullish coalescing operator ??
       //NL en FR tonen ophalen
+    
         const titelNL = mural.naam_fresco_nl || "Titel onbekend (NL)";
         const titelFR = mural.nom_de_la_fresque || "Titre inconnu (FR)";
 
@@ -44,8 +47,8 @@ function createMuralHTML (mural, favoriteMurals) {
       }
 
 
-      //muur card toevoegen NL (nog uitbreiden met voorkeurtaal later)
-
+      //muur card toevoegen NL 
+      if (lang == "NL") {
       return `
         <article class="mural-card">
 
@@ -76,6 +79,39 @@ function createMuralHTML (mural, favoriteMurals) {
           
        </article>
       `
+      }
+      else {
+        return `
+        <article class="mural-card">
+
+          
+
+          <div class="mural-img">${fotoHTML}</div>
+
+          
+            <div class="mural-preview">
+            ${fotoHTML}
+            </div>
+
+
+          <div id="${muralId}" class="mural-body" data-id="${muralId}">
+            <h2>${titelFR}</h2>
+
+            <p><b>Dessinateur: </b> ${tekenaarFR}</p>
+          
+            <p><b>Adresse: </b> ${adresFR}</p>
+
+            <p><b>Commune: </b> ${gemeenteFR}</p>
+
+            <a href="${site}" class="site" target="_blank"> plus d'infos </a>
+          </div>
+            <footer class="mural-footer">
+                <button type="button" class="favorite-mural" data-id="${muralId}">${iconSymbol}</button>
+            </footer>
+          
+       </article>
+      `
+      }
 }
 
 export function renderMurals(murals, favoriteMurals) {

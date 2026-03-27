@@ -10,52 +10,28 @@ const API_URL = 'https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/
 
 
 
-// HTML h1 Stripmuren Brussel Routeplanner en de sectie stripmuren
 
-const app = document.getElementById('app');
-app.innerHTML = `
- <main class="page">
- <div id="language-container">
- <button id="NL" class="language">NL</button>
- <button id="FR" class="language">FR</button>
- </div>
- <h1>Stripmuren Brussel Routeplanner</h1>
- <p id="status">Data wordt geladen...</p>
- <section class="filters">
-  <input id="filter-favorites" type="checkbox">
-  <label for="filter-favorites">Toon enkel Favoriete Stripmuren ❤️ </label>
-  
-  <label for="search-murals"> Zoeken </label>
-  <input id="search-murals" type="text" size="20">
-
-  <label for="sort-murals"> Sorteren op: </label>
-  <select id="sort-murals">
-    <option value="">  </option>
-    <option value="titel">Titel</option>
-    <option value="tekenaar">Tekenaar</option>
-  </select>
-
-  <button id="calc-route" style="display:none;">Bereken route</button>
- </section>
-  <div id="map"></div>
- <div id="favorites-layout"> 
-  <section id="murals" class="murals"></section>
-  <div id="route-map" style="display:none;"></div>
- </div>
- </main>
-`;
 
 // HTML elementen
+const statusElement = document.getElementById("status");
+const langNL = document.getElementById("NL");
+const langFR = document.getElementById("FR");
 
-const statusElement = document.getElementById('status');
+console.log("NL button =", langNL);
+console.log("FR button =", langFR);
+
 const searchInputElement = document.getElementById("search-murals");
-console.log(searchInputElement);
 const sortOption = document.getElementById("sort-murals");
 const filterFavo = document.getElementById("filter-favorites");
 
 const calcRoute = document.getElementById('calc-route');
-
 const layout = document.getElementById('favorites-layout');
+
+
+
+// taalvoorkeur 
+
+let currentLang = localStorage.getItem("preferredLanguage") || "NL";
 
 // MAP (LeafletMap/LeafletRouteMap) variabelen
 
@@ -78,6 +54,36 @@ let myIcon = L.divIcon({ className: "my-div-icon" });
 
 
 let allMurals = [];
+
+
+function switchLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem("preferredLanguage", lang);
+  let murals = getMurals();
+  if (lang == "NL") {
+    statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
+    document.querySelector("h1").textContent = "Stripmuren Brussel Routeplanner";
+    document.querySelector('label[for="filter-favorites"]').textContent = "Toon enkel Favoriete Stripmuren ❤️";
+    document.querySelector('label[for="search-murals"]').textContent = "Zoeken: ";
+    document.querySelector('label[for="sort-murals"]').textContent = "Sorteren op: ";
+    document.querySelector('#sort-murals option[value="titel"]').textContent = "Titel";
+    document.querySelector('#sort-murals option[value="tekenaar"]').textContent = "Tekenaar";
+
+
+    calcRoute.textContent = "Bereken route";
+  }
+  else {
+    statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
+    document.querySelector("h1").textContent = "Parcours des fresques de Bruxelles";
+    document.querySelector('label[for="filter-favorites"]').textContent = "Afficher seulement les fresques favorites ❤️";
+    document.querySelector('label[for="search-murals"]').textContent = "Chercher: ";
+    document.querySelector('label[for="sort-murals"]').textContent = "Trier par: ";
+    document.querySelector('#sort-murals option[value="titel"]').textContent = "Titre";
+    document.querySelector('#sort-murals option[value="tekenaar"]').textContent = "Dessinateur";
+    calcRoute.textContent = "Calculer l'itinéraire";
+  }
+  renderMurals(getMurals(), favoriteMurals);
+}
 
 
 function getMurals() {
@@ -149,7 +155,7 @@ function renderMap(murals) {
   muralMarkers = {};
   // alles markeren en tonen
   for (let mural of murals) {
-    console.log(mural.geo_point.lon + " - " + mural.geo_point.lat);
+    
     let marker = L.marker([mural.geo_point.lat, mural.geo_point.lon], { icon: myIcon }).addTo(markersLayer);
 
     marker.bindPopup(mural.naam_fresco_nl);
@@ -160,7 +166,7 @@ function renderMap(murals) {
 
   }
 
-  console.log("de marker keys", Object.keys(muralMarkers));
+ 
   let bounds = markersLayer.getBounds();
   map.fitBounds(bounds);
 }
@@ -178,6 +184,10 @@ localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
 
 //EVENTS
 
+// Event listener voor TAAL (click)
+
+langNL.addEventListener("click", () => switchLanguage("NL"));
+langFR.addEventListener("click", () => switchLanguage("FR"));
 
 // Event listener voor ZOEKEN (input)
 
@@ -187,10 +197,20 @@ searchInputElement.addEventListener("input", () => {
   renderMap(murals);
 
   if (!filterFavo || !filterFavo.checked) {
+    if (currentLang == "NL") {
     statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
+    }
+    else {
+      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
+    }
   }
   else {
+     if (currentLang == "NL") {
     statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
+     }
+     else {
+      statusElement.textContent = `Nombre de Fresques Favorites ❤️: ${murals.length}`;
+     }
   }
 });
 
@@ -211,7 +231,12 @@ filterFavo.addEventListener('change', () => {
 
 
   if (!filterFavo || !filterFavo.checked) {
-    statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
+    if (currentLang == "NL") {
+      statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
+    }
+    else {
+      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
+    }
     layout.classList.remove("favorites-checked");
     calcRoute.style.display = "none";
     document.getElementById("route-map").style.display = "none";
@@ -222,7 +247,12 @@ filterFavo.addEventListener('change', () => {
 
   }
   else {
+    if (currentLang == "NL") {
     statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
+    }
+    else {
+      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
+    }
     layout.classList.add("favorites-checked");
     calcRoute.style.display = "inline-block";
   }
@@ -264,13 +294,25 @@ document.addEventListener('click', function (event) {
 
 
     if (!filterFavo || !filterFavo.checked) {
-      statusElement.textContent = `Totaal Aantal Stripmuren: ${getMurals().length}`;
+      if (currentLang == "NL") {
+    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
+    }
+    else {
+      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
+    }
+      
       layout.classList.remove("favorites-checked");
       calcRoute.style.display = "none";
     }
     else {
       renderMurals(getMurals(), favoriteMurals);
-      statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${getMurals().length}`;
+      if (currentLang == "NL") {
+    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
+    }
+    else {
+      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
+    }
+      
       layout.classList.add("favorites-checked");
       calcRoute.style.display = "inline-block";
 
@@ -445,7 +487,13 @@ async function loadStripmuren(params) {
 
     allMurals = muralsWithPhoto;
 
-    statusElement.textContent = `Totaal Aantal stripmuren: ${muralsWithPhoto.length}`;
+    if (currentLang == "NL") {
+    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${muralsWithPhoto.length}`;
+    }
+    else {
+      statusElement.textContent = `Nombre Total de Fresques: ${muralsWithPhoto.length}`;
+    }
+   
 
     renderMurals(getMurals(), favoriteMurals);
 
@@ -465,5 +513,6 @@ async function loadStripmuren(params) {
 
 }
 
+switchLanguage(currentLang);
 loadStripmuren();
 
