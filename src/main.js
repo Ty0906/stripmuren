@@ -25,7 +25,7 @@ const sortOption = document.getElementById("sort-murals");
 const filterFavo = document.getElementById("filter-favorites");
 
 const calcRoute = document.getElementById('calc-route');
-const layout = document.getElementById('favorites-layout');
+const layout = document.body;
 
 
 
@@ -41,11 +41,6 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-let routeMap = L.map('route-map').setView([50.8503396, 4.3517103], 13);
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(routeMap);
 
 let markersLayer = L.featureGroup().addTo(map);
 let muralMarkers = {};
@@ -95,10 +90,6 @@ function getMurals() {
   let sortResult = [...allMurals];
   let newMurals = [];
 
-  /* if (!filterFavo || !filterFavo.checked) {
-    return allMurals;
-  }
-  else */
 
   if (filterFavo && filterFavo.checked) {
 
@@ -239,10 +230,10 @@ filterFavo.addEventListener('change', () => {
     }
     layout.classList.remove("favorites-checked");
     calcRoute.style.display = "none";
-    document.getElementById("route-map").style.display = "none";
+    
 
     if (routingControl) {
-      routeMap.removeControl(routingControl);
+      map.removeControl(routingControl);
     }
 
   }
@@ -339,12 +330,6 @@ let routingControl;
 
 calcRoute.addEventListener('click', () => {
 
-  //route-map zichtbaar maken
-  document.getElementById('route-map').style.display = "block";
-
-  setTimeout(() => {
-    routeMap.invalidateSize(); //Leaflet laten weten dat de kaart zichtbaar is en berekening nodig is voor Bounds
-  }, 100);
 
   const points = [];
 
@@ -367,7 +352,7 @@ calcRoute.addEventListener('click', () => {
 
 
   if (routingControl) {
-    routeMap.removeControl(routingControl);
+    map.removeControl(routingControl);
   }
 
 
@@ -390,18 +375,22 @@ calcRoute.addEventListener('click', () => {
         break;
 
       case 'Right':
+      case 'TurnRight' :
         text = 'Sla rechtsaf';
         break;
 
       case 'Left':
+      case 'Turnleft' :
         text = 'Sla linksaf';
         break;
 
       case 'SlightRight':
+      case 'KeepRight' :
         text = 'Houd rechts aan';
         break;
 
       case 'SlightLeft':
+      case 'KeepLeft' :
         text = 'Houd links aan';
         break;
 
@@ -429,16 +418,26 @@ calcRoute.addEventListener('click', () => {
         text = 'Bestemming bereikt';
         break;
 
-      default:
-        return instr.text; // fallback
+      case 'Fork':
+          text = instr.direction === 'right' ? 'Houd rechts aan bij de splitsing' :
+          instr.direction === 'left' ? 'Houd links aan bij de splitsing' :
+         'Kies een richting bij de splitsing';
+        break;
+
+       default:
+      // 👉 fallback voor Engelse instructies
+      text = vertaalEngelseTurn(instr);
+      break;
     }
 
-    // 👉 straatnaam toevoegen
-    if (instr.road) {
-      text += ' op ' + instr.road;
-    }
 
-    return text;
+  // Voeg straatnaam toe als die bestaat en nog niet in de text staat
+  if (instr.road && !text.includes(instr.road)) {
+    text += ' op ' + instr.road;
+  }
+  
+
+    return text || instr.text;
   };
 
   function vertaalRichtingNL(dir) {
@@ -455,23 +454,134 @@ calcRoute.addEventListener('click', () => {
     return map[dir] || dir;
   }
 
+  function vertaalEngelseTurn(instr) {
+  if (!instr.text) return '';
+
+  return instr.text
+    .replace(/^Turn right onto (.+)$/, 'Sla rechtsaf op $1')
+    .replace(/^Turn left onto (.+)$/, 'Sla linksaf op $1')
+    .replace(/^Turn right$/, 'Sla rechtsaf')
+    .replace(/^Turn left$/, 'Sla linksaf')
+    .replace(/^Continue$/, 'Ga rechtdoor')
+    .replace(/^Keep right$/, 'Houd rechts aan')
+    .replace(/^Keep left$/, 'Houd links aan');
+}
+
+
+const formatterFR = new L.Routing.Formatter({
+  language: 'fr'
+});
+
+function vertaalRichtingFR(dir) {
+  const map = {
+    N: 'nord',
+    NE: 'nord-est',
+    E: 'est',
+    SE: 'sud-est',
+    S: 'sud',
+    SW: 'sud-ouest',
+    W: 'ouest',
+    NW: 'nord-ouest'
+  };
+  return map[dir] || dir;
+}
+
+function vertaalEngelseTurnFR(instr) {
+  if (!instr.text) return '';
+
+  return instr.text
+    .replace(/^Turn right onto (.+)$/, 'Tournez à droite sur $1')
+    .replace(/^Turn left onto (.+)$/, 'Tournez à gauche sur $1')
+    .replace(/^Turn right$/, 'Tournez à droite')
+    .replace(/^Turn left$/, 'Tournez à gauche')
+    .replace(/^Continue$/, 'Continuez tout droit')
+    .replace(/^Keep right$/, 'Restez à droite')
+    .replace(/^Keep left$/, 'Restez à gauche');
+}
+
+formatterFR.formatInstruction = function (instr) {
+  let text = '';
+
+  switch (instr.type) {
+    case 'Head':
+      text = 'Départ';
+      if (instr.dir) text += ' en direction de ' + vertaalRichtingFR(instr.dir);
+      break;
+    case 'Straight':
+    case 'Continue':
+      text = 'Continuez tout droit';
+      break;
+    case 'Right':
+    case 'TurnRight':
+      text = 'Tournez à droite';
+      break;
+    case 'Left':
+    case 'TurnLeft':
+      text = 'Tournez à gauche';
+      break;
+    case 'SlightRight':
+    case 'KeepRight':
+      text = 'Restez légèrement à droite';
+      break;
+    case 'SlightLeft':
+    case 'KeepLeft':
+      text = 'Restez légèrement à gauche';
+      break;
+    case 'SharpRight':
+      text = 'Tournez fortement à droite';
+      break;
+    case 'SharpLeft':
+      text = 'Tournez fortement à gauche';
+      break;
+    case 'TurnAround':
+      text = 'Faites demi-tour';
+      break;
+    case 'Roundabout':
+      text = 'Prenez le rond-point';
+      break;
+    case 'Fork':
+      if (instr.direction === 'right') text = 'Restez à droite au carrefour';
+      else if (instr.direction === 'left') text = 'Restez à gauche au carrefour';
+      else text = 'Choisissez une direction au carrefour';
+      break;
+    case 'WaypointReached':
+      text = 'Point intermédiaire atteint';
+      break;
+    case 'DestinationReached':
+      text = 'Destination atteinte';
+      break;
+    default:
+      text = vertaalEngelseTurnFR(instr);
+      break;
+  }
+
+ 
+  if (instr.road && !text.includes(instr.road)) {
+    text += ' sur ' + instr.road;
+  }
+
+  return text || instr.text; 
+};
+
+  let formatterLang = formatterNL;
+  if (currentLang != "NL") { formatterLang = formatterFR; }
   routingControl = L.Routing.control({
     waypoints: points,
     router: L.Routing.osrmv1({
       serviceUrl: "https://routing.openstreetmap.de/routed-foot/route/v1",
       profile: "foot"
     }),
-    formatter: formatterNL,
+    formatter: formatterLang,
 
     routeWhileDragging: false,
     optimizeWaypoints: true,
     reorderWaypoints: true
-  }).addTo(routeMap);
+  }).addTo(map);
 
 
   routingControl.on("routesfound", function (e) {
     const route = e.routes[0];
-    routeMap.fitBounds(L.polyline(route.coordinates).getBounds());
+    map.fitBounds(L.polyline(route.coordinates).getBounds());
 
   });
 });

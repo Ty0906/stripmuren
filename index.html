@@ -10,44 +10,64 @@
      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
      crossorigin=""/>
      <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+     
+
   </head>
   <body>
     
-    <main class="page">
+    <header class="header">
       <div id="language-container">
         <button id="NL" class="language">NL</button>
         <button id="FR" class="language">FR</button>
       </div>
 
+      <div class="header-context">
       <h1>Stripmuren Brussel Routeplanner</h1>
       <p id="status">Data wordt geladen...</p>
-      <section class="filters">
-        <input id="filter-favorites" type="checkbox">
-        <label for="filter-favorites">Toon enkel Favoriete Stripmuren ❤️ </label>
-
-        <label for="search-murals"> Zoeken </label>
-        <input id="search-murals" type="text" size="20">
-        <label for="sort-murals">Sorteren op:</label>
-        <select id="sort-murals">
-          <option value=""></option>
-          <option value="titel">Titel</option>
-          <option value="tekenaar">Tekenaar</option>
-        </select>
-
-        <button id="calc-route" style="display: none;">Bereken route</button>
-      </section>
-      <div id="map"></div>
-      <div id="favorites-layout">
-        <section id="murals" class="murals"></section>
-        <div id="route-map" style="display: none;"></div>
       </div>
+
+      <section class="filters">
+        
+
+        <div class="filter-row">
+          <label for="search-murals"> Zoeken </label>
+          <input id="search-murals" type="text" size="20">
+        </div>
+
+        <div class="filter-row">
+          <label for="sort-murals">Sorteren op:</label>
+          <select id="sort-murals">
+            <option value=""></option>
+            <option value="titel">Titel</option>
+            <option value="tekenaar">Tekenaar</option>
+          </select>
+        </div>
+    
+      </section>
+
+    </header>
+      <main class="page">
+        <div class="checkbox-row">
+          <input id="filter-favorites" type="checkbox">
+          <label for="filter-favorites">Toon enkel Favoriete Stripmuren ❤️ </label>
+        
+        <button id="calc-route" style="display: none;">Bereken route</button>
+        </div>
+      <div id="map"></div>
+      
+      <section id="murals" class="murals"></section>
+      
+      
     </main>
      
     <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
 
+      
     <script defer src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+   
+   
 
 
     <script type="module" src="src/main.js"></script>
