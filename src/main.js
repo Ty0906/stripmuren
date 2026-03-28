@@ -1,6 +1,6 @@
 'use strict';
 
-//import './style.css';
+import './style.css';
 
 import { fetchMurals } from "./api.js";
 import { renderMurals } from "./render.js";
@@ -45,7 +45,19 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let markersLayer = L.featureGroup().addTo(map);
 let muralMarkers = {};
 
-let myIcon = L.divIcon({ className: "my-div-icon" });
+const iconNormal = L.icon({ 
+  iconUrl: "/icon.svg",
+  iconSize: [28, 28],
+ iconAnchor: [14, 14]
+ });
+
+ let iconFavo = L.divIcon({
+  className: "fav-marker",
+  html: `<span class="iconFavo">❤️</span>`,
+  iconSize: [28, 28],
+  iconAnchor: [14, 14]
+ });
+
 
 
 let allMurals = [];
@@ -54,8 +66,11 @@ let allMurals = [];
 function switchLanguage(lang) {
   currentLang = lang;
   localStorage.setItem("preferredLanguage", lang);
+  document.getElementById("NL").classList.remove("active");
+  document.getElementById("FR").classList.remove("active");
   let murals = getMurals();
   if (lang == "NL") {
+    document.getElementById("NL").classList.add("active");
     statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
     document.querySelector("h1").textContent = "Stripmuren Brussel Routeplanner";
     document.querySelector('label[for="filter-favorites"]').textContent = "Toon enkel Favoriete Stripmuren ❤️";
@@ -68,6 +83,7 @@ function switchLanguage(lang) {
     calcRoute.textContent = "Bereken route";
   }
   else {
+    document.getElementById("FR").classList.remove("active");
     statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
     document.querySelector("h1").textContent = "Parcours des fresques de Bruxelles";
     document.querySelector('label[for="filter-favorites"]').textContent = "Afficher seulement les fresques favorites ❤️";
@@ -147,11 +163,16 @@ function renderMap(murals) {
   // alles markeren en tonen
   for (let mural of murals) {
     
+    const muralId = mural.image?.id;
+    const isFav = muralId && favoriteMurals.includes(String(muralId));
+
+    const myIcon = isFav ? iconFavo : iconNormal;
+
     let marker = L.marker([mural.geo_point.lat, mural.geo_point.lon], { icon: myIcon }).addTo(markersLayer);
 
     marker.bindPopup(mural.naam_fresco_nl);
 
-    const muralId = mural.image?.id;
+    
     if (!muralId) continue;
     muralMarkers[muralId] = marker;
 

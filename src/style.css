@@ -70,6 +70,13 @@ body {
 }
 
 
+.language.active {
+  background-color: rgb(247, 90, 137); 
+  color: white;
+  
+}
+
+
 .header-context {
   justify-self: center;
   text-align: center;
@@ -255,7 +262,7 @@ h1 {
  
   box-shadow: 0 6px 18px rgba(0,0,0,.35);
   border-color: rgba(255,255,255,.5);
-  z-index: 2;
+  
 }
 
 .mural-img {
@@ -383,6 +390,13 @@ h1 {
   padding: 0;
 
   
+}
+
+.fav-marker .iconFavo {
+  font-size: 20px;
+  line-height: 20px;
+  display: block;
+  text-align: center;
 }
 
 .favorite-mural:hover {
