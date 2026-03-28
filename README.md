@@ -82,6 +82,7 @@ Leaflet en Leaflet Routing Machine sites: Quick Start + Documentation + GitHub
 
 ### AI chatlog
 
+0. Grid layout hulp gevraagd vooraf (nog geen account toen) zie zondag 8 maart 2026 wijzigingen in Git - maar deze heb ik zelf teruggedraaid omdat mijn eigen idee toch leuker was tov het overnemen van Grid layout (Grid layout hebben we niet gezien in cursus Web Basic, enkel flex) - zie post 9.
 1. Leaflet: basis opstelling: https://chatgpt.com/share/69b26476-1d48-800e-8cb1-ce34506716d3
     - geen resultaat: hulp gevraagd: lon/lat omgedraaid
     - geen resultaat: hulp gevraagd: icon was 0px = toegevoegd in css
@@ -118,4 +119,8 @@ Leaflet en Leaflet Routing Machine sites: Quick Start + Documentation + GitHub
     (zie ook uitleg hierboven nr. 4 waarom eigen vertalingen nodig bleken)
 8. Hulp checkbox styling css: https://chatgpt.com/share/69c6bcc5-abdc-8333-b9e2-cbb2070064b3
     - lelijke blauwe box vervangen door suggestie van chatGPT
+9. CSS hulp: https://chatgpt.com/share/69c7dcde-8d00-8329-8aac-0890ae3dcb78 
+    - eerst zelf grid teruggedraaid naar mijn eigen flex (zie post 0)
+    - sticky - fixed probs met header en kaart opgelost
+
 
