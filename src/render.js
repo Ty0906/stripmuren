@@ -1,8 +1,6 @@
 'use strict';
 
-function createMuralHTML (mural, favoriteMurals) {
-
-        const lang = localStorage.getItem("preferredLanguage") || "NL";
+function createMuralHTML (mural, favoriteMurals, lang) {
 
         const isNL = (lang === "NL");
         
@@ -28,8 +26,13 @@ function createMuralHTML (mural, favoriteMurals) {
 
         const foto = mural.image.url;
        
-        const fotoHTML = `<img src="${foto}" alt="${titelNL}">`;
-      
+        //const fotoHTML = `<img src="${foto}" alt="${titelNL}">`;
+        const fotoHTML = `<img 
+            src="/lazy.svg"
+            data-src="${foto}"
+            alt="${titel}"
+            class="lazy-img"
+            >`;
         const omschrTekenaar = isNL? "Tekenaar" : "Dessinateur";
         const omschrAdres = isNL? "Adres" : "Adresse";
         const omschrGemeente = isNL? "Gemeente" : "Commune";
@@ -81,14 +84,14 @@ function createMuralHTML (mural, favoriteMurals) {
       
 }
 
-export function renderMurals(murals, favoriteMurals) {
+export function renderMurals(murals, favoriteMurals, lang) {
 
     // murals ophalen voor grid te maken
     const muralsContainer = document.getElementById('murals');
     //muur kaarten op mijn pagina
     let html = "";
     for (let mural of murals) {
-        html += createMuralHTML(mural, favoriteMurals);
+        html += createMuralHTML(mural, favoriteMurals, lang);
         
     }
     muralsContainer.innerHTML = html;

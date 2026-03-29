@@ -4,11 +4,10 @@ import './style.css';
 
 import { fetchMurals } from "./api.js";
 import { renderMurals } from "./render.js";
+import { createFormatterNL, createFormatterFR } from './language.js';
+import { renderMap, muralMarkers, initMap } from './map.js';
 
 const API_URL = 'https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=-1';
-
-
-
 
 
 
@@ -29,9 +28,7 @@ const layout = document.body;
 
 
 
-// taalvoorkeur 
 
-let currentLang = localStorage.getItem("preferredLanguage") || "NL";
 
 // MAP (LeafletMap/LeafletRouteMap) variabelen
 
@@ -41,9 +38,7 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-
-let markersLayer = L.featureGroup().addTo(map);
-let muralMarkers = {};
+initMap(map);
 
 const iconNormal = L.icon({ 
   iconUrl: "/icon.svg",
@@ -58,10 +53,48 @@ const iconNormal = L.icon({
   iconAnchor: [14, 14]
  });
 
-
+// DATA / LOCAL STORAGE (favo & taal)
 
 let allMurals = [];
+// favoriete stripmuren in localStorage
+let favoriteMurals = JSON.parse(localStorage.getItem('favoriteMurals')) || [];
+favoriteMurals = favoriteMurals.filter(id => id && id !== "undefined" && id !== "null");
+localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
 
+let currentLang = localStorage.getItem("preferredLanguage") || "NL";
+
+
+// OBSERVER
+
+
+
+function lazyLoading() {
+  // Elementen detecteren die in beeld komen
+    const lazyImages = document.querySelectorAll(".lazy-img[data-src]");
+ 
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) { return; }
+          // Element is in beeld
+          const img = entry.target;
+          
+          img.src = img.dataset.src;
+          img.removeAttribute("data-src");
+          
+          // Stop met observeren nadat de afbeelding is geladen
+          lazyObserver.unobserve(img);
+        }
+      );
+    }, {
+      // Opties
+      rootMargin: '100px 0px', 
+      threshold: 0.1 
+    });
+    
+    // Start met observeren
+    lazyImages.forEach(img => lazyObserver.observe(img));
+    
+}
 
 function switchLanguage(lang) {
   currentLang = lang;
@@ -71,7 +104,14 @@ function switchLanguage(lang) {
   let murals = getMurals();
   if (lang == "NL") {
     document.getElementById("NL").classList.add("active");
+    if (!filterFavo || !filterFavo.checked) {
     statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
+    }
+    else {
+    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
+    }
+     
+  
     document.querySelector("h1").textContent = "Stripmuren Brussel Routeplanner";
     document.querySelector('label[for="filter-favorites"]').textContent = "Toon enkel Favoriete Stripmuren ❤️";
     document.querySelector('label[for="search-murals"]').textContent = "Zoeken: ";
@@ -79,12 +119,16 @@ function switchLanguage(lang) {
     document.querySelector('#sort-murals option[value="titel"]').textContent = "Titel";
     document.querySelector('#sort-murals option[value="tekenaar"]').textContent = "Tekenaar";
 
-
     calcRoute.textContent = "Bereken route";
   }
   else {
-    document.getElementById("FR").classList.remove("active");
+    document.getElementById("FR").classList.add("active");
+    if (!filterFavo || !filterFavo.checked) {
     statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
+    }
+    else {
+      statusElement.textContent = `Nombre de Fresques Favorites ❤️: ${murals.length}`;
+     }
     document.querySelector("h1").textContent = "Parcours des fresques de Bruxelles";
     document.querySelector('label[for="filter-favorites"]').textContent = "Afficher seulement les fresques favorites ❤️";
     document.querySelector('label[for="search-murals"]').textContent = "Chercher: ";
@@ -93,19 +137,19 @@ function switchLanguage(lang) {
     document.querySelector('#sort-murals option[value="tekenaar"]').textContent = "Dessinateur";
     calcRoute.textContent = "Calculer l'itinéraire";
   }
-  renderMurals(getMurals(), favoriteMurals);
+  
+  renderMurals(getMurals(), favoriteMurals, currentLang);
+  lazyLoading();
 }
 
 
 function getMurals() {
-
 
   let searchInput = searchInputElement.value;
   searchInput = searchInput.toLowerCase();
 
   let sortResult = [...allMurals];
   let newMurals = [];
-
 
   if (filterFavo && filterFavo.checked) {
 
@@ -121,8 +165,6 @@ function getMurals() {
     }
     sortResult = [...newMurals];
   }
-
-
 
   if (searchInput.length > 0) {
     let searchResult = [];
@@ -154,44 +196,9 @@ function getMurals() {
 
 }
 
-function renderMap(murals) {
-  //Leaflet toevoegen
 
 
-  markersLayer.clearLayers();
-  muralMarkers = {};
-  // alles markeren en tonen
-  for (let mural of murals) {
-    
-    const muralId = mural.image?.id;
-    const isFav = muralId && favoriteMurals.includes(String(muralId));
 
-    const myIcon = isFav ? iconFavo : iconNormal;
-
-    let marker = L.marker([mural.geo_point.lat, mural.geo_point.lon], { icon: myIcon }).addTo(markersLayer);
-
-    marker.bindPopup(mural.naam_fresco_nl);
-
-    
-    if (!muralId) continue;
-    muralMarkers[muralId] = marker;
-
-  }
-
- 
-  let bounds = markersLayer.getBounds();
-  map.fitBounds(bounds);
-}
-
-// favoriete stripmuren in localStorage
-let favoriteMurals = JSON.parse(localStorage.getItem('favoriteMurals')) || [];
-
-favoriteMurals = favoriteMurals.filter(id =>
-  id &&
-  id !== "undefined" &&
-  id !== "null");
-
-localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
 
 
 //EVENTS
@@ -205,8 +212,9 @@ langFR.addEventListener("click", () => switchLanguage("FR"));
 
 searchInputElement.addEventListener("input", () => {
   const murals = getMurals();
-  renderMurals(murals, favoriteMurals);
-  renderMap(murals);
+  renderMurals(murals, favoriteMurals, currentLang);
+  lazyLoading();
+  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
 
   if (!filterFavo || !filterFavo.checked) {
     if (currentLang == "NL") {
@@ -230,8 +238,9 @@ searchInputElement.addEventListener("input", () => {
 
 sortOption.addEventListener("change", () => {
   const murals = getMurals();
-  renderMurals(murals, favoriteMurals);
-  renderMap(murals);
+  renderMurals(murals, favoriteMurals, currentLang);
+  lazyLoading();
+  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
 })
 
 // Event listener voor FILTER FAVORIETEN (change)
@@ -239,7 +248,8 @@ sortOption.addEventListener("change", () => {
 filterFavo.addEventListener('change', () => {
 
   const murals = getMurals();
-  renderMurals(murals, favoriteMurals);
+  renderMurals(murals, favoriteMurals, currentLang);
+  lazyLoading();
 
 
   if (!filterFavo || !filterFavo.checked) {
@@ -269,7 +279,7 @@ filterFavo.addEventListener('change', () => {
     calcRoute.style.display = "inline-block";
   }
 
-  renderMap(murals);
+  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
 });
 
 // Event listener voor AANPASSEN FAVORIETEN + POPUP KAART
@@ -317,7 +327,8 @@ document.addEventListener('click', function (event) {
       calcRoute.style.display = "none";
     }
     else {
-      renderMurals(getMurals(), favoriteMurals);
+      renderMurals(getMurals(), favoriteMurals, currentLang);
+      lazyLoading();
       if (currentLang == "NL") {
     statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
     }
@@ -330,7 +341,7 @@ document.addEventListener('click', function (event) {
 
     }
 
-    renderMap(getMurals());
+    renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
 
     return;
   }
@@ -351,241 +362,32 @@ let routingControl;
 
 calcRoute.addEventListener('click', () => {
 
-
   const points = [];
 
   for (let id of favoriteMurals) {
     const marker = muralMarkers[id];
 
-
     if (marker) {
 
       const latLng = marker.getLatLng();
-
       points.push(latLng);
     }
-
-
-
   }
 
-  if (points.length < 2) { alert("Je moet minstens 2 favoriete stripmuren hebben om een route te berekenen!") }
+  if (points.length < 2) { alert(currentLang == "NL" 
+    ? "Je moet minstens 2 favoriete stripmuren hebben om een route te berekenen!"
+    : "Vous devez avoir au mons 2 fresques favorites pour calculer un itinéraire!");
+   return; }
 
 
   if (routingControl) {
     map.removeControl(routingControl);
   }
 
-
-  const formatterNL = new L.Routing.Formatter({
-    language: 'nl'
-  });
-
-  formatterNL.formatInstruction = function (instr) {
-    let text = '';
-
-    switch (instr.type) {
-      case 'Head':
-        text = 'Vertrek';
-        if (instr.dir) text += ' richting ' + vertaalRichtingNL(instr.dir);
-        break;
-
-      case 'Straight':
-      case 'Continue':
-        text = 'Ga rechtdoor';
-        break;
-
-      case 'Right':
-      case 'TurnRight' :
-        text = 'Sla rechtsaf';
-        break;
-
-      case 'Left':
-      case 'Turnleft' :
-        text = 'Sla linksaf';
-        break;
-
-      case 'SlightRight':
-      case 'KeepRight' :
-        text = 'Houd rechts aan';
-        break;
-
-      case 'SlightLeft':
-      case 'KeepLeft' :
-        text = 'Houd links aan';
-        break;
-
-      case 'SharpRight':
-        text = 'Sla scherp rechtsaf';
-        break;
-
-      case 'SharpLeft':
-        text = 'Sla scherp linksaf';
-        break;
-
-      case 'TurnAround':
-        text = 'Keer om';
-        break;
-
-      case 'Roundabout':
-        text = 'Neem de rotonde';
-        break;
-
-      case 'WaypointReached':
-        text = 'Tussenpunt bereikt';
-        break;
-
-      case 'DestinationReached':
-        text = 'Bestemming bereikt';
-        break;
-
-      case 'Fork':
-          text = instr.direction === 'right' ? 'Houd rechts aan bij de splitsing' :
-          instr.direction === 'left' ? 'Houd links aan bij de splitsing' :
-         'Kies een richting bij de splitsing';
-        break;
-
-       default:
-      // 👉 fallback voor Engelse instructies
-      text = vertaalEngelseTurn(instr);
-      break;
-    }
-
-
-  // Voeg straatnaam toe als die bestaat en nog niet in de text staat
-  if (instr.road && !text.includes(instr.road)) {
-    text += ' op ' + instr.road;
-  }
+  let formatterLang = createFormatterNL();
+  if (currentLang == "FR") { formatterLang = createFormatterFR(); }
   
-
-    return text || instr.text;
-  };
-
-  function vertaalRichtingNL(dir) {
-    const map = {
-      N: 'noord',
-      NE: 'noordoost',
-      E: 'oost',
-      SE: 'zuidoost',
-      S: 'zuid',
-      SW: 'zuidwest',
-      W: 'west',
-      NW: 'noordwest'
-    };
-    return map[dir] || dir;
-  }
-
-  function vertaalEngelseTurn(instr) {
-  if (!instr.text) return '';
-
-  return instr.text
-    .replace(/^Turn right onto (.+)$/, 'Sla rechtsaf op $1')
-    .replace(/^Turn left onto (.+)$/, 'Sla linksaf op $1')
-    .replace(/^Turn right$/, 'Sla rechtsaf')
-    .replace(/^Turn left$/, 'Sla linksaf')
-    .replace(/^Continue$/, 'Ga rechtdoor')
-    .replace(/^Keep right$/, 'Houd rechts aan')
-    .replace(/^Keep left$/, 'Houd links aan');
-}
-
-
-const formatterFR = new L.Routing.Formatter({
-  language: 'fr'
-});
-
-function vertaalRichtingFR(dir) {
-  const map = {
-    N: 'nord',
-    NE: 'nord-est',
-    E: 'est',
-    SE: 'sud-est',
-    S: 'sud',
-    SW: 'sud-ouest',
-    W: 'ouest',
-    NW: 'nord-ouest'
-  };
-  return map[dir] || dir;
-}
-
-function vertaalEngelseTurnFR(instr) {
-  if (!instr.text) return '';
-
-  return instr.text
-    .replace(/^Turn right onto (.+)$/, 'Tournez à droite sur $1')
-    .replace(/^Turn left onto (.+)$/, 'Tournez à gauche sur $1')
-    .replace(/^Turn right$/, 'Tournez à droite')
-    .replace(/^Turn left$/, 'Tournez à gauche')
-    .replace(/^Continue$/, 'Continuez tout droit')
-    .replace(/^Keep right$/, 'Restez à droite')
-    .replace(/^Keep left$/, 'Restez à gauche');
-}
-
-formatterFR.formatInstruction = function (instr) {
-  let text = '';
-
-  switch (instr.type) {
-    case 'Head':
-      text = 'Départ';
-      if (instr.dir) text += ' en direction de ' + vertaalRichtingFR(instr.dir);
-      break;
-    case 'Straight':
-    case 'Continue':
-      text = 'Continuez tout droit';
-      break;
-    case 'Right':
-    case 'TurnRight':
-      text = 'Tournez à droite';
-      break;
-    case 'Left':
-    case 'TurnLeft':
-      text = 'Tournez à gauche';
-      break;
-    case 'SlightRight':
-    case 'KeepRight':
-      text = 'Restez légèrement à droite';
-      break;
-    case 'SlightLeft':
-    case 'KeepLeft':
-      text = 'Restez légèrement à gauche';
-      break;
-    case 'SharpRight':
-      text = 'Tournez fortement à droite';
-      break;
-    case 'SharpLeft':
-      text = 'Tournez fortement à gauche';
-      break;
-    case 'TurnAround':
-      text = 'Faites demi-tour';
-      break;
-    case 'Roundabout':
-      text = 'Prenez le rond-point';
-      break;
-    case 'Fork':
-      if (instr.direction === 'right') text = 'Restez à droite au carrefour';
-      else if (instr.direction === 'left') text = 'Restez à gauche au carrefour';
-      else text = 'Choisissez une direction au carrefour';
-      break;
-    case 'WaypointReached':
-      text = 'Point intermédiaire atteint';
-      break;
-    case 'DestinationReached':
-      text = 'Destination atteinte';
-      break;
-    default:
-      text = vertaalEngelseTurnFR(instr);
-      break;
-  }
-
- 
-  if (instr.road && !text.includes(instr.road)) {
-    text += ' sur ' + instr.road;
-  }
-
-  return text || instr.text; 
-};
-
-  let formatterLang = formatterNL;
-  if (currentLang != "NL") { formatterLang = formatterFR; }
+  
   routingControl = L.Routing.control({
     waypoints: points,
     router: L.Routing.osrmv1({
@@ -609,7 +411,7 @@ formatterFR.formatInstruction = function (instr) {
 
 
 
-async function loadStripmuren(params) {
+async function loadMurals(params) {
 
   try {
     const murals = await fetchMurals();
@@ -625,10 +427,10 @@ async function loadStripmuren(params) {
       statusElement.textContent = `Nombre Total de Fresques: ${muralsWithPhoto.length}`;
     }
    
-
-    renderMurals(getMurals(), favoriteMurals);
-
-    renderMap(getMurals());
+    
+    renderMurals(getMurals(), favoriteMurals, currentLang);
+    lazyLoading();
+    renderMap(map, getMurals(), favoriteMurals, iconNormal, iconFavo);
 
     //resultaten in DOM tonen
     console.log(allMurals);
@@ -644,6 +446,8 @@ async function loadStripmuren(params) {
 
 }
 
+
+
 switchLanguage(currentLang);
-loadStripmuren();
+loadMurals();
 

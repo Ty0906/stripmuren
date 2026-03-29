@@ -288,7 +288,9 @@ h1 {
   
 }
 
-
+.lazy-img {
+  background-color: white;
+}
 
 .mural-preview {
   position: fixed;

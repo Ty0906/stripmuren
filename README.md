@@ -80,7 +80,10 @@ MDN (topic: Array)
 
 Leaflet en Leaflet Routing Machine sites: Quick Start + Documentation + GitHub
 
-Cartoon Bubble by Samy Menai from "https://thenounproject.com/browse/icons/term/cartoon-bubble/" title="Cartoon Bubble Icons" Noun Project (CC BY 3.0)
+Cartoon Bubble by Samy Menai from "https://thenounproject.com/browse/icons/term/cartoon-bubble/" title="Cartoon Bubble Icons" Noun Project (CC BY 3.0) => zie icon.svg
+
+comic talk by Andy Horvath from "https://thenounproject.com/browse/icons/term/comic-talk/" title="comic talk Icons" Noun Project (CC BY 3.0) => zie lazy.svg
+
 
 ### AI chatlog
 
@@ -126,5 +129,9 @@ Cartoon Bubble by Samy Menai from "https://thenounproject.com/browse/icons/term/
     - sticky - fixed probs met header en kaart opgelost
 10. CSS hulp: https://chatgpt.com/share/69c8f066-d1b0-8328-b479-bd971f0dbd98
     - kleur hartje proberen te evenaren en toepassen in css
+11. LazyImage Observer: https://chatgpt.com/share/69c8fe0d-37d0-8387-a20c-07e2a29b984e
+    - vooral cursus gevolgd maar vraag gesteld over hoe ik dit kon zien (mijn vermoeden: achtergrond = correct = kleine css aanpassing gedaan)
+12. LazyImage Observer: https://chatgpt.com/share/69c91f9e-ed78-8331-be13-73f93145382d
+    - nog een fout met de taal, bleek een lazyObserver vergeten te hebben (zelf gevonden nadat ik al taal had aangepast en niet bleek te werken)
 
 
