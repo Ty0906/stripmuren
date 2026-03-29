@@ -71,7 +71,7 @@ body {
 
 
 .language.active {
-  background-color: rgb(247, 90, 137); 
+  background-color: rgb(225, 59, 92); 
   color: white;
   
 }
@@ -139,7 +139,7 @@ h1 {
 
 /* checked state */
 .checkbox-row input[type="checkbox"]:checked {
-  background-color: rgb(247, 90, 137);
+  background-color: rgb(225, 59, 92);
   border-color: rgb(247, 90, 137);
 }
 
@@ -220,7 +220,7 @@ h1 {
 
 .leaflet-routing-alt tr:hover * {
   
-  background-color: rgb(247, 90, 137);
+  background-color: rgb(225, 59, 92);
 }
 
 .my-div-icon {

@@ -124,5 +124,7 @@ Cartoon Bubble by Samy Menai from "https://thenounproject.com/browse/icons/term/
 9. CSS hulp: https://chatgpt.com/share/69c7dcde-8d00-8329-8aac-0890ae3dcb78 
     - eerst zelf grid teruggedraaid naar mijn eigen flex (zie post 0)
     - sticky - fixed probs met header en kaart opgelost
+10. CSS hulp: https://chatgpt.com/share/69c8f066-d1b0-8328-b479-bd971f0dbd98
+    - kleur hartje proberen te evenaren en toepassen in css
 
 
