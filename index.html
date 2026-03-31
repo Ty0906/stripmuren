@@ -16,6 +16,7 @@
   <body>
     
     <header class="header">
+      <section class="filters">
       <div id="language-container">
         <button id="NL" class="language">NL</button>
         <button id="FR" class="language">FR</button>
@@ -26,36 +27,43 @@
       <p id="status">Data wordt geladen...</p>
       </div>
 
-      <section class="filters">
+      
         
 
         <div class="filter-row">
           <label for="search-murals"> Zoeken </label>
           <input id="search-murals" type="text" size="20">
-        </div>
+        
 
-        <div class="filter-row">
-          <label for="sort-murals">Sorteren op:</label>
+        
+          <label for="sort-murals">Sorteren op </label>
           <select id="sort-murals">
             <option value=""></option>
             <option value="titel">Titel</option>
             <option value="tekenaar">Tekenaar</option>
           </select>
         </div>
+       
+
+        
     
       </section>
 
-    </header>
-      <main class="page">
-        
+       <div class="controls">
         <div class="checkbox-row">
           <input id="filter-favorites" type="checkbox">
           <label for="filter-favorites">Toon enkel Favoriete Stripmuren ❤️ </label>
           
           <button id="calc-route" style="display: none;">Bereken route</button>
         </div>
+        </div>
+      <div class="map-container">
         <div id="map"></div>
-     
+        </div>
+
+    </header>
+      <main class="page">
+        
       <section id="murals" class="murals"></section>
       
       
