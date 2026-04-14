@@ -30,7 +30,15 @@ export function renderMap(map, murals, favoriteMurals, iconNormal, iconFavo) {
 
   }
 
- 
-  let bounds = markersLayer.getBounds();
+  
+  if (markersLayer.getLayers().length === 0) {
+    return;
+  }
+
+
+  const bounds = markersLayer.getBounds();
+
+  if (bounds.isValid()) {
   map.fitBounds(bounds);
+  }
 }

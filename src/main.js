@@ -7,17 +7,12 @@ import { renderMurals } from "./render.js";
 import { createFormatterNL, createFormatterFR } from './language.js';
 import { renderMap, muralMarkers, initMap } from './map.js';
 
-const API_URL = 'https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=-1';
-
 
 
 // HTML elementen
 const statusElement = document.getElementById("status");
 const langNL = document.getElementById("NL");
 const langFR = document.getElementById("FR");
-
-console.log("NL button =", langNL);
-console.log("FR button =", langFR);
 
 const searchInputElement = document.getElementById("search-murals");
 const sortOption = document.getElementById("sort-murals");
@@ -27,12 +22,9 @@ const calcRoute = document.getElementById('calc-route');
 const layout = document.body;
 
 
-
-
-
 // MAP (LeafletMap/LeafletRouteMap) variabelen
 
-let map = L.map('map').setView([50.8503396, 4.3517103], 13);
+const map = L.map('map').setView([50.8503396, 4.3517103], 13);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -46,7 +38,7 @@ const iconNormal = L.icon({
  iconAnchor: [14, 14]
  });
 
- let iconFavo = L.divIcon({
+ const iconFavo = L.divIcon({
   className: "fav-marker",
   html: `<span class="iconFavo">❤️</span>`,
   iconSize: [28, 28],
@@ -108,17 +100,10 @@ function switchLanguage(lang) {
   localStorage.setItem("preferredLanguage", lang);
   document.getElementById("NL").classList.remove("active");
   document.getElementById("FR").classList.remove("active");
-  let murals = getMurals();
-  if (lang == "NL") {
-    document.getElementById("NL").classList.add("active");
-    if (!filterFavo || !filterFavo.checked) {
-    statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
-    }
-    else {
-    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
-    }
-     
   
+  if (lang === "NL") {
+    document.getElementById("NL").classList.add("active");
+     
     document.querySelector("h1").textContent = "Stripmuren Brussel Routeplanner";
     document.querySelector('label[for="filter-favorites"]').textContent = "Toon enkel Favoriete Stripmuren ❤️";
     document.querySelector('label[for="search-murals"]').textContent = "Zoeken: ";
@@ -130,12 +115,7 @@ function switchLanguage(lang) {
   }
   else {
     document.getElementById("FR").classList.add("active");
-    if (!filterFavo || !filterFavo.checked) {
-    statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
-    }
-    else {
-      statusElement.textContent = `Nombre de Fresques Favorites ❤️: ${murals.length}`;
-     }
+    
     document.querySelector("h1").textContent = "Parcours des fresques de Bruxelles";
     document.querySelector('label[for="filter-favorites"]').textContent = "Afficher seulement les fresques favorites ❤️";
     document.querySelector('label[for="search-murals"]').textContent = "Chercher: ";
@@ -145,10 +125,28 @@ function switchLanguage(lang) {
     calcRoute.textContent = "Calculer l'itinéraire";
   }
   
-  renderMurals(getMurals(), favoriteMurals, currentLang);
+  const murals = getMurals();
+
+  renderMurals(murals, favoriteMurals, currentLang);
   lazyLoading();
+  updateStatus(murals);
 }
 
+function updateStatus(murals) {
+
+  if (!filterFavo || !filterFavo.checked) {
+    statusElement.textContent =
+      currentLang === "NL"
+        ? `Totaal Aantal Stripmuren: ${murals.length}`
+        : `Nombre Total de Fresques: ${murals.length}`;
+  }
+  else {
+    statusElement.textContent =
+      currentLang === "NL"
+        ? `Aantal Favoriete Stripmuren ❤️: ${murals.length}`
+        : `Nombre de Fresques Favorites ❤️: ${murals.length}`;
+  }
+}
 
 function getMurals() {
 
@@ -189,12 +187,12 @@ function getMurals() {
   const sortValue = sortOption.value;
 
 
-  if (sortValue == "titel") {
+  if (sortValue === "titel") {
     sortResult.sort((a, b) => (a.naam_fresco_nl || "").localeCompare(b.naam_fresco_nl || "", 'nl', { sensitivity: 'base' })
     );
   }
 
-  if (sortValue == "tekenaar") {
+  if (sortValue === "tekenaar") {
     sortResult.sort((a, b) => (a.dessinateur || "").localeCompare(b.dessinateur || "", 'nl', { sensitivity: 'base' })
     );
   }
@@ -221,24 +219,10 @@ searchInputElement.addEventListener("input", () => {
   const murals = getMurals();
   renderMurals(murals, favoriteMurals, currentLang);
   lazyLoading();
+  
   renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
 
-  if (!filterFavo || !filterFavo.checked) {
-    if (currentLang == "NL") {
-    statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
-    }
-    else {
-      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
-    }
-  }
-  else {
-     if (currentLang == "NL") {
-    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
-     }
-     else {
-      statusElement.textContent = `Nombre de Fresques Favorites ❤️: ${murals.length}`;
-     }
-  }
+ updateStatus(murals);
 });
 
 // Event listener voor SORTEREN (change)
@@ -248,6 +232,7 @@ sortOption.addEventListener("change", () => {
   renderMurals(murals, favoriteMurals, currentLang);
   lazyLoading();
   renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
+  updateStatus(murals);
 })
 
 // Event listener voor FILTER FAVORIETEN (change)
@@ -260,12 +245,8 @@ filterFavo.addEventListener('change', () => {
 
 
   if (!filterFavo || !filterFavo.checked) {
-    if (currentLang == "NL") {
-      statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
-    }
-    else {
-      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
-    }
+
+    
     layout.classList.remove("favorites-checked");
     calcRoute.style.display = "none";
     
@@ -276,20 +257,17 @@ filterFavo.addEventListener('change', () => {
 
   }
   else {
-    if (currentLang == "NL") {
-    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
-    }
-    else {
-      statusElement.textContent = `Nombre de Fresques Favorites ❤️: ${murals.length}`;
-    }
+    
     layout.classList.add("favorites-checked");
     calcRoute.style.display = "inline-block";
   }
 
+  updateStatus(murals);
+
   renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
 });
 
-// Event listener voor AANPASSEN FAVORIETEN + POPUP KAART
+// Event listener voor AANPASSEN FAVORIETEN + POPUP KAART (click)
 
 
 document.addEventListener('click', function (event) {
@@ -300,7 +278,7 @@ document.addEventListener('click', function (event) {
 
     const id = btn.getAttribute('data-id');
 
-    if (!id || id == "undefined" || id == "null") { return; }
+    if (!id || id === "undefined" || id === "null") { return; }
 
     if (favoriteMurals.includes(id)) {
       /*
@@ -321,34 +299,24 @@ document.addEventListener('click', function (event) {
 
     console.log("favorieten: " + favoriteMurals);
 
-    let murals = getMurals();
+    const murals = getMurals();
+    renderMurals(murals, favoriteMurals, currentLang);
+    lazyLoading();
+    updateStatus(murals);
+    renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
+
     if (!filterFavo || !filterFavo.checked) {
-      if (currentLang == "NL") {
-    statusElement.textContent = `Totaal Aantal Stripmuren: ${murals.length}`;
-    }
-    else {
-      statusElement.textContent = `Nombre Total de Fresques: ${murals.length}`;
-    }
-      
+
       layout.classList.remove("favorites-checked");
       calcRoute.style.display = "none";
     }
     else {
-      renderMurals(getMurals(), favoriteMurals, currentLang);
-      lazyLoading();
-      if (currentLang == "NL") {
-    statusElement.textContent = `Aantal Favoriete Stripmuren ❤️: ${murals.length}`;
-    }
-    else {
-      statusElement.textContent = `Nombre de Fresques Favorites ❤️: ${murals.length}`;
-    }
-      
       layout.classList.add("favorites-checked");
       calcRoute.style.display = "inline-block";
 
     }
-
-    renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
+    
+ 
 
     return;
   }
@@ -389,7 +357,7 @@ calcRoute.addEventListener('click', () => {
     }
   }
 
-  if (points.length < 2) { alert(currentLang == "NL" 
+  if (points.length < 2) { alert(currentLang === "NL" 
     ? "Je moet minstens 2 favoriete stripmuren hebben om een route te berekenen!"
     : "Vous devez avoir au mons 2 fresques favorites pour calculer un itinéraire!");
    return; }
@@ -400,7 +368,7 @@ calcRoute.addEventListener('click', () => {
   }
 
   let formatterLang = createFormatterNL();
-  if (currentLang == "FR") { formatterLang = createFormatterFR(); }
+  if (currentLang === "FR") { formatterLang = createFormatterFR(); }
   
   
   routingControl = L.Routing.control({
@@ -419,22 +387,30 @@ calcRoute.addEventListener('click', () => {
   routingControl.on("routingerror", function (err) {
   console.error("Routing error:", err);
 
-  alert(currentLang == "NL"
+  alert(currentLang === "NL"
     ? "De route kon niet worden berekend. De server is mogelijk tijdelijk niet beschikbaar."
     : "L'itinéraire n'a pas pu être calculé. Le serveur est peut-être temporairement indisponible.");
 
   });
 
   routingControl.on("routesfound", function (e) {
+    if (!e.routes || e.routes.length === 0) return;
+
     const route = e.routes[0];
-    map.fitBounds(L.polyline(route.coordinates).getBounds());
+    
+    if (!route.coordinates || route.coordinates.length === 0) return;
+
+    const polyline = L.polyline(route.coordinates);
+    const bounds = polyline.getBounds();
+
+    if (bounds.isValid()) { map.fitBounds(bounds);} 
 
   });
 });
 
 
 
-async function loadMurals(params) {
+async function loadMurals() {
 
   try {
     const murals = await fetchMurals();
@@ -443,17 +419,12 @@ async function loadMurals(params) {
 
     allMurals = muralsWithPhoto;
 
-    if (currentLang == "NL") {
-    statusElement.textContent = `Totaal Aantal Stripmuren: ${muralsWithPhoto.length}`;
-    }
-    else {
-      statusElement.textContent = `Nombre Total de Fresques: ${muralsWithPhoto.length}`;
-    }
-   
-    
-    renderMurals(getMurals(), favoriteMurals, currentLang);
+    const muralsFiltered = getMurals();
+
+    renderMurals(muralsFiltered, favoriteMurals, currentLang);
     lazyLoading();
-    renderMap(map, getMurals(), favoriteMurals, iconNormal, iconFavo);
+    renderMap(map, muralsFiltered, favoriteMurals, iconNormal, iconFavo);
+    updateStatus(muralsFiltered);
 
     //resultaten in DOM tonen
     console.log(allMurals);

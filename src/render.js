@@ -84,7 +84,6 @@ function createMuralHTML (mural, favoriteMurals, lang) {
 
 export function renderMurals(murals, favoriteMurals, lang) {
 
-    // murals ophalen voor grid te maken
     const muralsContainer = document.getElementById('murals');
     //muur kaarten op mijn pagina
     let html = "";
