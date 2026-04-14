@@ -52,16 +52,14 @@ function createMuralHTML (mural, favoriteMurals, lang) {
       //muur card toevoegen  
      
       return `
-        <article class="mural-card">
+        <article class="mural-card" style="--preview-img: url('${foto}')">
 
           
 
           <div class="mural-img">${fotoHTML}</div>
 
           
-            <div class="mural-preview">
-            ${fotoHTML}
-            </div>
+            <div class="mural-preview"></div>
 
 
           <div id="${muralId}" class="mural-body" data-id="${muralId}">

@@ -332,11 +332,15 @@ body {
   opacity: 1;
 }
 
-.mural-preview img {
-  display: block;
-  max-width: min(92vw, 1000px);
-  max-height: 45vh;
-  object-fit: contain;
+.mural-preview::before {
+
+  content: "";
+  width: min(92vw, 1000px);
+  height: 45vh;
+  background-image: var(--preview-img);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
   border-radius: 8px;
 }
 
