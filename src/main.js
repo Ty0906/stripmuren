@@ -64,15 +64,17 @@ localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
 let currentLang = localStorage.getItem("preferredLanguage") || "NL";
 
 
-// OBSERVER
+// OBSERVER init
 
+let lazyObserver;
 
+function initLazyLoading() {
+  
 
-function lazyLoading() {
   // Elementen detecteren die in beeld komen
-    const lazyImages = document.querySelectorAll(".lazy-img[data-src]");
+    
  
-    const lazyObserver = new IntersectionObserver((entries) => {
+     lazyObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) { return; }
           // Element is in beeld
@@ -90,7 +92,12 @@ function lazyLoading() {
       rootMargin: '100px 0px', 
       threshold: 0.1 
     });
-    
+}
+
+
+function lazyLoading() {
+
+   const lazyImages = document.querySelectorAll(".lazy-img[data-src]");
     // Start met observeren
     lazyImages.forEach(img => lazyObserver.observe(img));
     
@@ -356,6 +363,14 @@ document.addEventListener('click', function (event) {
 });
 
 
+// Warning negeren "pas op je gebruikt een demo server"
+
+const originalWarn = console.warn;
+console.warn = function (...args) {
+  if (args[0] && args[0].includes('OSRM')) return;
+  originalWarn.apply(console, args);
+};
+
 // Eventlistener actieknop 'bereken route' (click)
 
 let routingControl;
@@ -401,6 +416,14 @@ calcRoute.addEventListener('click', () => {
     reorderWaypoints: true
   }).addTo(map);
 
+  routingControl.on("routingerror", function (err) {
+  console.error("Routing error:", err);
+
+  alert(currentLang == "NL"
+    ? "De route kon niet worden berekend. De server is mogelijk tijdelijk niet beschikbaar."
+    : "L'itinéraire n'a pas pu être calculé. Le serveur est peut-être temporairement indisponible.");
+
+  });
 
   routingControl.on("routesfound", function (e) {
     const route = e.routes[0];
@@ -447,7 +470,7 @@ async function loadMurals(params) {
 }
 
 
-
+initLazyLoading();
 switchLanguage(currentLang);
 loadMurals();
 

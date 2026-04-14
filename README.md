@@ -133,5 +133,8 @@ comic talk by Andy Horvath from "https://thenounproject.com/browse/icons/term/co
     - vooral cursus gevolgd maar vraag gesteld over hoe ik dit kon zien (mijn vermoeden: achtergrond = correct = kleine css aanpassing gedaan)
 12. LazyImage Observer: https://chatgpt.com/share/69c91f9e-ed78-8331-be13-73f93145382d
     - nog een fout met de taal, bleek een lazyObserver vergeten te hebben (zelf gevonden nadat ik al taal had aangepast en niet bleek te werken)
+13. Onderdrukken warning: https://chatgpt.com/share/69de1bb9-b830-8333-a29d-c38b91e05b49
+    - OSRM gebruikt een demo server en geeft telkens een warning in de DOM: 
+        besproken met docent: vermelden was ok/alert ook - hier toch gezorgd dat dit opgevangen werd:
 
 
