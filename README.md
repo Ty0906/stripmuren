@@ -1,11 +1,28 @@
-# Stripmuren Brussel
+# Stripmuren Brussel Routeplanner
 
-Interactieve webapplicatie bouwen rond de stripmuren in Brussel
+
+
+*Persoonlijke noot:*
+    *Ik heb voor deze applicatie gekozen omdat ik deze stripmuren al zelf heb bezocht.*
+    *Eén van de zaken die ik toen op de bestaande website ook al gemerkt had is dat je wel een kaartje hebt met de locatie van de bestaande stripmuren, maar dat je zelf je route moet gaan "puzzelen".*
+*
+    *Het was dan ook een leuke uitdaging om hieraan een oplossing te kunnen bieden en de opdracht binnen het vak Advanced Web te kunnen ontwikkelen met een persoonlijke motivatie.*
+    *Deze website ga ik heel waarschijnlijk wel nog gebruiken als we terug een uitje Brussel plannen.*
+
 
 
 ## 1. Projectbeschrijving
 
---
+Stripmuren Brussel Routeplanner is een interactieve (single-page) webapplicatie die gebruikers toelaat om de beroemde stripmuren in Brussel te ontdekken én een route tussen hun favoriete muren te genereren. 
+De applicatie haalt de werkelijke data op via de Open Data Brussels API en combineert een lijstweergave met een interactieve kaart (Leaflet).
+
+Gebruikers kunnen:
+    - stripmuren bekijken en uitgebreid verkennen in een overzichtelijke kaart- en lijstweergave 
+    - zoeken, sorteren en filteren
+    - favoriete stripmuren opslaan
+    - hun voorkeur (taal, favorieten) bewaren tussen sessies
+    - een wandelroute berekenen langs hun favoriete stripmuren
+
 
 ### Functionaliteiten 
 
@@ -21,37 +38,87 @@ Bron: Opendata.brussels.be
 URL: https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=-1
 
 Dataset:
-- naam van de stripmuur (NL)
-- naam van de stripmuur (FR)
+- naam van de stripmuur (NL/FR)
 - Tekenaar 
-- adres (NL)
-- adres (FR)
-- gemeente (NL)
-- gemeente (FR)
-- wijk 
-- foto
-- meer info (link naar officiële website)
+- adres (NL/FR)
+- gemeente (NL/FR)
+- foto/afbeelding
+- meer info (externe link naar officiële website)
+- Geo-locatie (lat / lon)
 
 ## 3. Implementatie van technische vereiste
 
 1. DOM-manipulatie:
-    Genereren van kaarten
+
+    Selecteren van elementen: 
+        - main.js lijnnr 13-22, 101-102, 105-125 (document.getElementById, querySelector, ClassList)
+        - render.js lijnnr 87
+    Renderen van HTML kaarten: 
+        - file render.js: lijnnr 30-35 + 54-94
+    Event listeners:
+        - main.js lijnnr 213-214 & 273 & 346 = click events (taal en favorieten en popup kaart en bereken route)
+        - main.js lijnr 218 = input event (zoeken)
+        - main.js lijnnr 230 & 240  = change event (sorteren en filteren favorieten)
+
 
 2. Modern JavaScript:
-    - const/let
-    - template literals(truthly/falsy/..)
-    - async/await
+
+    - const:
+        - api.js lijnnr 5 & 10 & 16 & 17
+        - language.js lijnnr 6 & 191
+        - main.js lijnnr 13-41 & 128 & 187 & 219 & 231 & 242 & 275 & 279 & 302 & 327 & 336 & 348 & 351 & 355 & 399 & 403 & 404 & 416 & 418 & 422
+        - map.js lijnnr 19-22 & 39
+
+    - let:
+        - main.js lijnnr 50-61
+        - render.js lijnnr 5-49 & 87
+
+    - template literals:
+        - api.js lijnnr 13
+        - main.js lijnnr 41 & 140-141 & 146-147 
+        - render.js lijnnr 30-35 & 54-81
+
+    - iteratie over arrays
+
+    - array methodes
+
+    - arrow functions
+
+    - conditional (ternary) operator (moderne if..else)
+
+    - Callback functions
+
+    - async/await/callback
+
+    - Observer API
+
     - Local Storage
-    - externe link naar officiële website op elke stripmuur
+
 
 3. Data & API:
+
     - Fetch API
+
     - JSON 
 
-4. Styling:
-   - CSS basis
-   - Flexbox layout
+4. Opslag en validatie
 
+    - Formulier validatie
+
+    - Local Storage
+
+5. Styling:
+
+    - basis HTML layout
+    - CSS basis
+    - Gebruiksvriendelijke elementen (verwijderknoppen, icoontjes,..)
+    - Responsive design
+
+6. Tooling & structuur:
+
+    - Project is opgezet met Vite
+
+    - Correcte folderstructuur
 ---
 ## 4. Installatiehandleiding
 
@@ -134,7 +201,11 @@ comic talk by Andy Horvath from "https://thenounproject.com/browse/icons/term/co
 12. LazyImage Observer: https://chatgpt.com/share/69c91f9e-ed78-8331-be13-73f93145382d
     - nog een fout met de taal, bleek een lazyObserver vergeten te hebben (zelf gevonden nadat ik al taal had aangepast en niet bleek te werken)
 13. Onderdrukken warning: https://chatgpt.com/share/69de1bb9-b830-8333-a29d-c38b91e05b49
-    - OSRM gebruikt een demo server en geeft telkens een warning in de DOM: 
-        besproken met docent: vermelden was ok/alert ook - hier toch gezorgd dat dit opgevangen werd:
+    - OSRM gebruikt een demo server en geeft daarover telkens een warning in de F12: 
+        besproken met docent: vermelden was ok/alert ook - hier toch gezorgd dat dit opgevangen werd
+14. LazyImage Observer: https://chatgpt.com/share/69de2bf2-1278-8330-84d1-74766ff8936f 
+    - ik kreeg telkens een unchecked runtime.lastError, na onderzoek bleek dat deze werd getriggered bij taalswitch. 
+    - hulp gevraagd of hier iets kon aan gedaan worden, bleek dat de observer door de volledige re-render de boosdoener was
+    - init observer afgesplitst van werkelijk laden lazyImage 
 
 
