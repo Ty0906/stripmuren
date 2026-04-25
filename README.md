@@ -28,7 +28,7 @@ Gebruikers kunnen:
 ### Functionaliteiten 
 
 - Taal NL/FR: klik op icoontje om de taal van de volledige website te wijzigen 
-    voorkeur wordt opgeslagen en duidelijk visuelee aangeduidt (roze kleur))
+    voorkeur wordt opgeslagen en duidelijk visueel aangeduid (roze kleur))
 
 - Zichtbaarheid aantal stripmuren: elke keer wordt het aantal stripmuren (ook na filtering/enkel favoriete muren tonen enz) duidelijk getoond
 
@@ -40,7 +40,7 @@ Gebruikers kunnen:
 - Sorteren op: dropdown met mogelijkheid om de stripmuren alfabetisch te sorteren op:
     - tekenaar 
     - titel
-    Deze sortering kan ook gebruikt worden in combinatie met filtering en favoriete muren
+  Deze sortering kan ook gebruikt worden in combinatie met filtering en favoriete muren
 
 - Toon enkel Favoriete Stripmuren: checkbox die overschakelt naar aangeduide favoriete stripmuren = stripmuren met ❤️ icoontje (aantal ook zichtbaar)
 
@@ -55,6 +55,8 @@ Gebruikers kunnen:
     - routeinstructies die zichtbaar zijn op de map (je kan volgen waar je zit bij scrollen op de instructie)
     - routeinstructies zijn in de taal van de website (NL of FR)
 
+- Button Kaart verbergen / Kaart tonen: zorgt voor weergave van enkel de stripmuurkaarten of standaard weergave van zowel stripmuurkaarten als map met locatie van de stripmuurkaarten (points)
+
 - Map: bevat alle stripmuren die getoond worden onder de map
 
     - stripmuren worden aangeduid met een tekstballon icoontje
@@ -66,7 +68,7 @@ Gebruikers kunnen:
 - Stripmuurkaarten - Foto:
     
     - elke stripmuurkaart heeft een foto
-    - hover over de foto om deze grote te zien
+    - hover over de foto om deze groter te zien
 
 - Stripmuurkaarten - Titel:
 
@@ -95,7 +97,7 @@ Gebruikers kunnen:
     - klik 🤍 aan en het icoontje wijzigt naar favoriet = ❤️ icoontje
     - dit wordt ook onmiddellijk op de map gewijzigd naar een ❤️ icoontje ipv tekstballon
     - klik ❤️ aan en het icoontje wijzigt naar favoriet = 🤍 icoontje
-    - dit wordt ook onmiddellijk op de map gewijzigd terug naar tekstballon ip een ❤️ icoontje
+    - dit wordt ook onmiddellijk op de map gewijzigd terug naar tekstballon ipv een ❤️ icoontje
 
 
 ## 2. Gebruikte API's met links
@@ -121,16 +123,16 @@ Dataset:
 ### 3.1 DOM-manipulatie:
 
     Selecteren van elementen: 
-        - main.js lijnnr 13-22, 101-102, 105-125 (document.getElementById, querySelector, ClassList)
+        - main.js lijnnr 13-25, 104-105, 108-128 (document.getElementById, querySelector, ClassList)
         - render.js lijnnr 87
 
     Renderen van HTML kaarten: 
         - file render.js: lijnnr 30-35 + 54-94
 
     Event listeners:
-        - main.js lijnnr 213-214 & 273 & 346 = click events (taal en favorieten en popup kaart en bereken route)
-        - main.js lijnr 218 = input event (zoeken)
-        - main.js lijnnr 230 & 240  = change event (sorteren en filteren favorieten)
+        - main.js lijnnr 230 & 243-244 & 303 & 372 = click events (inklapbare map, taal en favorieten en popup kaart en bereken route)
+        - main.js lijnr 248 = input event (zoeken)
+        - main.js lijnnr 260 & 270  = change event (sorteren en filteren favorieten)
 
 ### 3.2 Modern JavaScript:
 
@@ -138,70 +140,70 @@ Dataset:
         gebruikt voor waarden die enkel geinitieerd en niet heringesteld worden
         - api.js lijnnr 5 & 10 & 16 & 17
         - language.js lijnnr 6 & 191
-        - main.js lijnnr 13-41 & 128 & 187 & 219 & 231 & 242 & 275 & 279 & 302 & 327 & 336 & 348 & 351 & 355 & 399 & 403 & 404 & 416 & 418 & 422
+        - main.js lijnnr 13-44 & & 76 & 95 & 131 & 191 & 210 & 249 & 261 & 272 & 305 & 309 & 332 & 357 & 366 & 378 & & 381 & 385 & 429 & 433 & 434 & 446 & 448 & 452 
         - map.js lijnnr 19-22 & 39
 
     - let:
         gebruikt voor variabele waarden (worden heringesteld)
-        - main.js lijnnr 50-61
+        - main.js lijnnr 53-64
         - render.js lijnnr 5-49 & 87
 
     - template literals:
         vooral gebruikt voor HTML structuur dynamisch op te bouwen
         - api.js lijnnr 13 (voor error foutmelding, met literals duidelijker/leesbaarder)
-        - main.js lijnnr 41 & 140-141 & 146-147 
+        - main.js lijnnr 44 & 144-145 & 150-151 
         - render.js lijnnr 30-35 & 54-81
 
     - iteratie over arrays
         door mijn (lijst)items loopen om de UI te renderen
-        - main.js lijnnr 70 & 94 (forEach)
-        - main.js lijnnr 161 & 177 (for)
+        - main.js lijnnr 73 & 97 (forEach)
+        - main.js lijnnr 165 & 181 (for)
         - render.js lijnnr 90
 
     - array methodes
         sort en filter functies gebruikt (MDN tutorial)
-        - main.js lijnnr 191 & 196 (.sort)
-        - main.js lijnnr 53 & 290 & 418 (.filter)
+        - main.js lijnnr 195 & 200 (.sort)
+        - main.js lijnnr 56 & 320 & 448 (.filter)
 
     - arrow functions
         waar duidelijk gebruikt voor events en array methodes
-        - main.js lijnnr 53 & 70 & 94 & 191 & 196 & 290 & 418 (array methodes)
-        - main.js lijnnr 213-214 & 218 & 230 & 240 & 346 (events)
+        - main.js lijnnr 56 & 73 & 97 & 195 & 200 & 320 & 448 (array methodes)
+        - main.js lijnnr 230 & 243-244 & 248 & 260 & 270 & 376 (events)
 
     - conditional (ternary) operator 
-        moderne if..else gebruikt bij condities met 1 lijn code als resultaat voor leesbaarheid - zie ook functie updateStatus in main.js lijnnr 135
+        moderne if..else gebruikt bij condities met 1 lijn code als resultaat voor leesbaarheid - zie ook functie updateStatus in main.js lijnnr 139 en updateToggleMapText in main.js lijnnr 209
         - language.js lijnner 69 & 70
-        - main.js lijnnr 139-141 & 145-147 & 162 & 298 & 360-362 & 390-392 
+        - main.js lijnnr 143-145 & 149-151 & 166 & 328 & 390-392 & 420-422 
         - map.js lijnnr 19 & 22
         - render.js lijnnr 9 & 13 & 17 & 21 & 36-45 & 49
 
     - Callback functions 
         Event listeners gebruiken callbacks omdat code pas uitgevoerd wordt wanneer event plaatsvindt
-        - main.js lijnnr 213-214 (callback = () => switchLanguage("NL") of ("FR"), wordt doorgegeven aan addEventListener)
-        - main.js lijnnr 218 & 230 & 240 & 273 (callback = () => {...})
-        (filter callbacks: filter roept mijn functie aan om te beslissen welke elementen blijven)
-        - main.js lijnnr 53 & 290 & 418
+        - main.js lijnnr 243-244 (callback = () => switchLanguage("NL") of ("FR"), wordt doorgegeven aan addEventListener)
+        - main.js lijnnr 248 & 260 & 270 & 303 & 376 (callback = () => {...})
+        - main.js lijnnr 56 & 320 & 448 (filter callbacks: filter roept mijn functie aan om te beslissen welke elementen blijven)
+        - main.js lijnnr 73 & 97
         (forEach callbacks =(entry => ... en img => ..) : forEach voert mijn functie uit voor elk element )
-        - main.js lijnnr 70 & 94
+        
 
     - async/await/promises
         - api.js async function fetchMurals() 
-        - main.js lijnnr 413-433 async function loadMurals() met try/catch 
+        - main.js lijnnr 443-473 async function loadMurals() met try/catch 
 
     - Observer API
-        - main.js lijnnr 61-96 IntersectionObserver (lazy image loading)
+        - main.js lijnnr 64-99 IntersectionObserver (lazy image loading)
 
     - Local Storage
-        - main.js lijnnr 48-56 & 100 & 296 (favoriteMurals & PreferredLanguage)
+        - main.js lijnnr 51-59 & 103 & 326 (favoriteMurals & PreferredLanguage)
 
 ### 3.3 Data & API:
 
     - Fetch API: api.js lijnnr 10 fetch(API_URL)
 
     - JSON :
-        - main.js lijnnr 52 JSON.parse (omzetten string naar JS object (array))
+        - main.js lijnnr 55 JSON.parse (omzetten string naar JS object (array))
         tussendoor ongeldige id's wegfilteren 
-        - main.js lijnnr 54 JSON.stringify (omzetten array naar string om propere data opnieuw opslaan (localStorage))
+        - main.js lijnnr 57 JSON.stringify (omzetten array naar string om propere data opnieuw opslaan (localStorage))
 
 ### 3.4 Opslag en validatie
 
@@ -245,18 +247,21 @@ Dataset:
 
     - Gebruiksvriendelijke elementen (verwijderknoppen, icoontjes,..)
 
-        checkbox "toon enkel favoriete muren" (index.html lijnnr 54-55)
-            style.css lijnnr 105-144 & 161-166 & 374-379 & 449-458 & 465-470
+        Button "Toon kaart/verberg kaart" geeft je de mogelijkheid om gebruiksvriendelijk door alle kaarten te scrollen zonder dat de kaart "in de weg" staat (index.html lijnnr 61-63)
+            style.css lijnnr 174-208 & 530-549 
 
-        button "bereken route" (verschijnt enkel bij check favoriete muren=true (zie main.js lijnnr 247-263 & 308-317))
-            style.css lijnnr 92-104 & 460
+        checkbox "toon enkel favoriete muren" (index.html lijnnr 54-55)
+            style.css lijnnr 105-144 & 160-166 & 415-420 & 490-499 & 506-511
+
+        button "bereken route" (verschijnt enkel bij check favoriete muren=true (zie main.js lijnnr 277-293 & 338-347))
+            style.css lijnnr 92-104 & 501
 
         aanklikbaar icoontje (❤️) voor aanduiden favoriete stripmuur (render.js lijnnr 76-78 )
-            style.css lijnnr 296-313
+            style.css lijnnr 343-354
 
 
         buttons voor taal NL/FR (index.html lijnnr 20-23)
-            style.css lijnnr 39-57 & 
+            style.css lijnnr 39-57 & 447-450
 
         dropdown voor sorteren op titel, tekenaar (index.html lijnnr 39-45)
             style.css lijnnr 65-90
@@ -264,8 +269,8 @@ Dataset:
     - Responsive design
         style.css bestaat uit volgende delen:
             - MOBILE FIRST (start lijnnr 23) voor kleine schermen tot 700px
-            - TABLET (start lijnnr 347) voor schermen van 701px tot 1099px
-            - DESKTOP (start lijnnr 393) voor desktop (vanaf 1100px)
+            - TABLET (start lijnnr 388) voor schermen van 701px tot 1099px
+            - DESKTOP (start lijnnr 434) voor desktop (vanaf 1100px)
 
 ### 3.6 Tooling & structuur:
 
@@ -315,6 +320,11 @@ Dataset:
 
 - Tablet/phone screenshot
 ![Overzicht Applicatie Klein](screenshots/overzicht-phone.jpg)
+
+- Button Kaart verbergen : overzichttelijke weergave van alle stripmuurkaarten
+![Overzicht Applicatie zonder Kaart](screenshots/overzicht-zonder-kaart.jpg)
+
+- Button Kaart tonen: terug zichtbaar maken van de kaart (zie Algemene screenshot)
 
 - Taal NL/FR: klik op icoontje om de taal van de volledige website te wijzigen (voorkeur wordt opgeslagen)
 ![Taal FR](screenshots/taal.jpg)
@@ -378,7 +388,7 @@ Dataset:
 ### AI chatlog
 
 00. Grid layout hulp gevraagd vooraf (nog geen account toen) zie zondag 8 maart 2026 wijzigingen in Git (deze chat heb ik jammergenoeg niet opgeslagen) - maar deze heb ik zelf teruggedraaid omdat mijn eigen idee toch leuker was tov het overnemen van Grid layout (Grid layout hebben we niet gezien in cursus Web Basic, enkel flex) - zie post 9. 
-0. Ik had de tekst van mijn chat wel gekopieerd naar een bestand. Toen gevraagd en account aanmaken was juiste oplossing. Om volledig te zijn, voeg ik wel het word bestand toe van vooraf gevraagde hulp (zie AI chatlog.docx in folder WEB ADVANCED PROJECT). Deze bevat:
+0. Ik had de tekst van mijn chat wel gekopieerd naar een bestand. Toen gevraagd en account aanmaken was juiste oplossing. Om volledig te zijn, voeg ik wel het word bestand toe van vooraf gevraagde hulp (zie AI chatlog.docx rechtstreeks in folder stripmuren). Deze bevat:
     - vraag over style.css die error gaf zolang ik nog met live server werkte (pag1)
     - vraag over bijkomende file waarbij ik export was vergeten (pag 3)
     - vraag over hartjes icoon (hoe dit gebruiken) (pag 5)
