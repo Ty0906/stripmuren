@@ -1,14 +1,15 @@
 # Stripmuren Brussel Routeplanner
 
+**Project repository:**
+https://github.com/Ty0906/stripmuren
 
 
 *Persoonlijke noot:*
-    *Ik heb voor deze applicatie gekozen omdat ik deze stripmuren al zelf heb bezocht.*
-    *Eén van de zaken die ik toen op de bestaande website ook al gemerkt had is dat je wel een kaartje hebt met de locatie van de bestaande stripmuren, maar dat je zelf je route moet gaan "puzzelen".*
+    *Ik heb voor deze applicatie gekozen omdat ik de bestaande stripmuren website al zelf heb gebruikt en een werkelijke tour hiervan heb gedaan in Brussel.*
+    *Eén van de zaken die ik toen op de bestaande website gemerkt had is dat - ondanks je wel een kaartje hebt met de locatie van de bestaande stripmuren - je zelf je route moet gaan "puzzelen".*
 *
-    *Het was dan ook een leuke uitdaging om hieraan een oplossing te kunnen bieden en de opdracht binnen het vak Advanced Web te kunnen ontwikkelen met een persoonlijke motivatie.*
-    *Deze website ga ik heel waarschijnlijk wel nog gebruiken als we terug een uitje Brussel plannen.*
-
+    *Het was dan ook een leuke uitdaging om hieraan een oplossing te kunnen bieden met mijn website en de opdracht binnen het vak Advanced Web te kunnen ontwikkelen met een persoonlijke motivatie.*
+    *Deze eigen website ga ik dus zelf wel nog gebruiken als we nogmaals een uitje Brussel plannen en we een route langs de stripmuren willen doen.*
 
 
 ## 1. Projectbeschrijving
@@ -26,7 +27,75 @@ Gebruikers kunnen:
 
 ### Functionaliteiten 
 
+- Taal NL/FR: klik op icoontje om de taal van de volledige website te wijzigen 
+    voorkeur wordt opgeslagen en duidelijk visuelee aangeduidt (roze kleur))
 
+- Zichtbaarheid aantal stripmuren: elke keer wordt het aantal stripmuren (ook na filtering/enkel favoriete muren tonen enz) duidelijk getoond
+
+- Zoeken: de ingetypte tekst zal zoeken in alle data van de stripmuren (niet hoofdletter gevoelig) en de lijst met resultaten geven (alsook het aantal). 
+    vb. Geef "steen" in => geeft 2 resultaten (stripmuur met tekenaar Willy Vandersteen - en stripmuur met adres vlaamseSTEENweg)
+
+    ==> de map toont nu ook enkel de gefilterde resultaten (map kan hierdoor worden uitgezoomd als de stripmuren zich dicht bij elkaar bevinden)
+
+- Sorteren op: dropdown met mogelijkheid om de stripmuren alfabetisch te sorteren op:
+    - tekenaar 
+    - titel
+    Deze sortering kan ook gebruikt worden in combinatie met filtering en favoriete muren
+
+- Toon enkel Favoriete Stripmuren: checkbox die overschakelt naar aangeduide favoriete stripmuren = stripmuren met ❤️ icoontje (aantal ook zichtbaar)
+
+    - de button "bereken route" verschijnt nu ook
+    - de map wordt iets vergroot zodat bij een route een duidelijker beeld kan gegeven worden
+    - de map toont enkel de favoriete stripmuren met een hart icoontje ipv een tekstballon
+    - afvinken van een favoriet zal deze onmiddellijk uit de lijst wegfilteren (aantal wordt ook aangepast)
+
+- Button Bereken Route (bij filtering op favoriete stripmuren): er wordt een wandelroute berekend en getoond op de map + instructies
+
+    - veiligheid en alert bij minder dan 2 favoriete muren (je kan geen route berekenen met maar 1 of geen punten)
+    - routeinstructies die zichtbaar zijn op de map (je kan volgen waar je zit bij scrollen op de instructie)
+    - routeinstructies zijn in de taal van de website (NL of FR)
+
+- Map: bevat alle stripmuren die getoond worden onder de map
+
+    - stripmuren worden aangeduid met een tekstballon icoontje
+    - favoriete stripmuren worden aangeduid met een ❤️ icoontje
+    - je kan deze icoontjes aanklikken en dan krijg je de titel van de stripmuur als pop-up
+    - zoomen op de kaart kan met + en - of met scroll van de muis
+    - verplaatsen kaartview kan (muis op kaart klikken en verplaatsen)
+
+- Stripmuurkaarten - Foto:
+    
+    - elke stripmuurkaart heeft een foto
+    - hover over de foto om deze grote te zien
+
+- Stripmuurkaarten - Titel:
+
+    - Elke stripmuurkaart heeft een titel
+    - hover over de titel en deze wordt groter en gekleurd (wordt roze) getoond (=duidelijk aanklikbaar)
+    - Klik op de titel: De pop-up op de map verschijnt zodat je weet waar deze stripmuur zich bevindt
+
+- Stripmuurkaarten - informatie:
+
+    - Elke stripmuurkaart heeft: 
+        een Tekenaar (sorteerbaar)
+        een Adres (zoekbaar)
+        een Gemeente (zoekbaar)
+
+- Stripmuurkaarten - meer info:
+
+    - Elke stripmuurkaart heeft een URL link "meer info"
+    - Hover over "meer info" en deze wordt groter en onderlijnd getoond (=duidelijk maken van link/aanklikbaar)
+    - klik op "meer info": er wordt een nieuw tabblad geopend naar de juiste stripmuur op de officiële website zodat je alle info hier ook kan nalezen
+
+- Stripmuurkaarten - 🤍 of ❤️ icoontje:
+
+    - Elke stripmuurkaart heeft een 🤍/❤️ icoontje 
+    - hover over deze hartjes en deze worden groter getoond (=duidelijk aanklikbaar)
+    - kan aangeduid/opgeslagen worden als "favoriet" = ❤️
+    - klik 🤍 aan en het icoontje wijzigt naar favoriet = ❤️ icoontje
+    - dit wordt ook onmiddellijk op de map gewijzigd naar een ❤️ icoontje ipv tekstballon
+    - klik ❤️ aan en het icoontje wijzigt naar favoriet = 🤍 icoontje
+    - dit wordt ook onmiddellijk op de map gewijzigd terug naar tekstballon ip een ❤️ icoontje
 
 
 ## 2. Gebruikte API's met links
@@ -46,115 +115,275 @@ Dataset:
 - meer info (externe link naar officiële website)
 - Geo-locatie (lat / lon)
 
+
 ## 3. Implementatie van technische vereiste
 
-1. DOM-manipulatie:
+### 3.1 DOM-manipulatie:
 
     Selecteren van elementen: 
         - main.js lijnnr 13-22, 101-102, 105-125 (document.getElementById, querySelector, ClassList)
         - render.js lijnnr 87
+
     Renderen van HTML kaarten: 
         - file render.js: lijnnr 30-35 + 54-94
+
     Event listeners:
         - main.js lijnnr 213-214 & 273 & 346 = click events (taal en favorieten en popup kaart en bereken route)
         - main.js lijnr 218 = input event (zoeken)
         - main.js lijnnr 230 & 240  = change event (sorteren en filteren favorieten)
 
-
-2. Modern JavaScript:
+### 3.2 Modern JavaScript:
 
     - const:
+        gebruikt voor waarden die enkel geinitieerd en niet heringesteld worden
         - api.js lijnnr 5 & 10 & 16 & 17
         - language.js lijnnr 6 & 191
         - main.js lijnnr 13-41 & 128 & 187 & 219 & 231 & 242 & 275 & 279 & 302 & 327 & 336 & 348 & 351 & 355 & 399 & 403 & 404 & 416 & 418 & 422
         - map.js lijnnr 19-22 & 39
 
     - let:
+        gebruikt voor variabele waarden (worden heringesteld)
         - main.js lijnnr 50-61
         - render.js lijnnr 5-49 & 87
 
     - template literals:
-        - api.js lijnnr 13
+        vooral gebruikt voor HTML structuur dynamisch op te bouwen
+        - api.js lijnnr 13 (voor error foutmelding, met literals duidelijker/leesbaarder)
         - main.js lijnnr 41 & 140-141 & 146-147 
         - render.js lijnnr 30-35 & 54-81
 
     - iteratie over arrays
+        door mijn (lijst)items loopen om de UI te renderen
+        - main.js lijnnr 70 & 94 (forEach)
+        - main.js lijnnr 161 & 177 (for)
+        - render.js lijnnr 90
 
     - array methodes
+        sort en filter functies gebruikt (MDN tutorial)
+        - main.js lijnnr 191 & 196 (.sort)
+        - main.js lijnnr 53 & 290 & 418 (.filter)
 
     - arrow functions
+        waar duidelijk gebruikt voor events en array methodes
+        - main.js lijnnr 53 & 70 & 94 & 191 & 196 & 290 & 418 (array methodes)
+        - main.js lijnnr 213-214 & 218 & 230 & 240 & 346 (events)
 
-    - conditional (ternary) operator (moderne if..else)
+    - conditional (ternary) operator 
+        moderne if..else gebruikt bij condities met 1 lijn code als resultaat voor leesbaarheid - zie ook functie updateStatus in main.js lijnnr 135
+        - language.js lijnner 69 & 70
+        - main.js lijnnr 139-141 & 145-147 & 162 & 298 & 360-362 & 390-392 
+        - map.js lijnnr 19 & 22
+        - render.js lijnnr 9 & 13 & 17 & 21 & 36-45 & 49
 
-    - Callback functions
+    - Callback functions 
+        Event listeners gebruiken callbacks omdat code pas uitgevoerd wordt wanneer event plaatsvindt
+        - main.js lijnnr 213-214 (callback = () => switchLanguage("NL") of ("FR"), wordt doorgegeven aan addEventListener)
+        - main.js lijnnr 218 & 230 & 240 & 273 (callback = () => {...})
+        (filter callbacks: filter roept mijn functie aan om te beslissen welke elementen blijven)
+        - main.js lijnnr 53 & 290 & 418
+        (forEach callbacks =(entry => ... en img => ..) : forEach voert mijn functie uit voor elk element )
+        - main.js lijnnr 70 & 94
 
-    - async/await/callback
+    - async/await/promises
+        - api.js async function fetchMurals() 
+        - main.js lijnnr 413-433 async function loadMurals() met try/catch 
 
     - Observer API
+        - main.js lijnnr 61-96 IntersectionObserver (lazy image loading)
 
     - Local Storage
+        - main.js lijnnr 48-56 & 100 & 296 (favoriteMurals & PreferredLanguage)
+
+### 3.3 Data & API:
+
+    - Fetch API: api.js lijnnr 10 fetch(API_URL)
+
+    - JSON :
+        - main.js lijnnr 52 JSON.parse (omzetten string naar JS object (array))
+        tussendoor ongeldige id's wegfilteren 
+        - main.js lijnnr 54 JSON.stringify (omzetten array naar string om propere data opnieuw opslaan (localStorage))
+
+### 3.4 Opslag en validatie
+
+    - Formulier validatie (main.js)
+
+        - validatie data uit LocalStorage - valideert of elke id bestaat:
+            favoriteMurals = favoriteMurals.filter(id => id && id !== "undefined" && id !== "null");
+        - validatie van minstens 2 punten zodat route kan berekend worden (je kan geen route hebben met minder dan 2 punten, dit zou crash geven):
+              if (points.length < 2) { alert(currentLang === "NL" 
+                ? "Je moet minstens 2 favoriete stripmuren hebben om een route te berekenen!"
+                : "Vous devez avoir au mons 2 fresques favorites pour calculer un itinéraire!");
+              return; }
 
 
-3. Data & API:
+    - Local Storage (main.js)
 
-    - Fetch API
+        - opslag van favoriete stripmuren: 
+            favoriete stripmuren worden ingelezen (indien leeg wordt lege array voorzien)
+                let favoriteMurals = JSON.parse(localStorage.getItem('favoriteMurals')) || [];
+            data wordt opgeschoond door filter:
+                favoriteMurals = favoriteMurals.filter(id => id && id !== "undefined" && id !== "null");
+            correcte data wordt terug bewaard als string (stringify) en terug naar localStorage gezet (setItem) 
+                localStorage.setItem('favoriteMurals', JSON.stringify(favoriteMurals));
+        
+        - opslag van voorkeurstaal:
+            voorkeurstaal wordt gelezen:
+                let currentLang = localStorage.getItem("preferredLanguage") || "NL";
+            voorkeurstaal wordt gezet bij clickevent die functie switchLanguage(lang) uitvoert:
+                function switchLanguage(lang) {
+                 currentLang = lang;
+                 localStorage.setItem("preferredLanguage", lang);
 
-    - JSON 
-
-4. Opslag en validatie
-
-    - Formulier validatie
-
-    - Local Storage
-
-5. Styling:
+### 3.5 Styling:
 
     - basis HTML layout
-    - CSS basis
-    - Gebruiksvriendelijke elementen (verwijderknoppen, icoontjes,..)
-    - Responsive design
+        index.html: basis structuur header (met inhoud), main (zonder inhoud) 
+        render.js: bevat de main inhoud= mural cards: lijnnr 54-98
 
-6. Tooling & structuur:
+    - CSS basis
+        zie style.css: alle basis stijl elementen gebruikt zoals background, border, font, ..
+
+    - Gebruiksvriendelijke elementen (verwijderknoppen, icoontjes,..)
+
+        checkbox "toon enkel favoriete muren" (index.html lijnnr 54-55)
+            style.css lijnnr 105-144 & 161-166 & 374-379 & 449-458 & 465-470
+
+        button "bereken route" (verschijnt enkel bij check favoriete muren=true (zie main.js lijnnr 247-263 & 308-317))
+            style.css lijnnr 92-104 & 460
+
+        aanklikbaar icoontje (❤️) voor aanduiden favoriete stripmuur (render.js lijnnr 76-78 )
+            style.css lijnnr 296-313
+
+
+        buttons voor taal NL/FR (index.html lijnnr 20-23)
+            style.css lijnnr 39-57 & 
+
+        dropdown voor sorteren op titel, tekenaar (index.html lijnnr 39-45)
+            style.css lijnnr 65-90
+
+    - Responsive design
+        style.css bestaat uit volgende delen:
+            - MOBILE FIRST (start lijnnr 23) voor kleine schermen tot 700px
+            - TABLET (start lijnnr 347) voor schermen van 701px tot 1099px
+            - DESKTOP (start lijnnr 393) voor desktop (vanaf 1100px)
+
+### 3.6 Tooling & structuur:
 
     - Project is opgezet met Vite
+        project aangemaakt met npm create vite@latest
 
     - Correcte folderstructuur
----
+        scheiding tussen HTML, CSS, JS (met verschillende js files voor duidelijkheid)
+        stripmuren
+            public
+                bevat de gebruikte svg 
+            screenshots
+                bevat de screenshots (hoofdstuk 5)
+            src
+                api.js (fetch muren)
+                language.js (vertaling map-instructies)
+                main.js (main file met logica en events)
+                map.js (kaart + markers)
+                render.js (renderen van stripmuurkaarten)
+                style.css (styling)
+            index.html
+
+
 ## 4. Installatiehandleiding
 
+### Vereisten
+  - Node.js 
+  - npm
+
+### Stappen
 1. Clone repository:
     git clone https://github.com/Ty0906/stripmuren.git
 2. Juiste map selecteren:
     cd stripmuren
-3. Dependecies:
+3. Dependencies:
     npm install
 4. Dev server:
     npm run dev
+5. Open applicatie in de browser:
+    http://localhost:5173 
 
----
 
 ## 5. Screenshots van de applicatie
 
----
+- Algemene screenshot Stripmuren Brussel Routeplanner
+![Overzicht Applicatie](screenshots/overzicht.png)
+
+- Tablet/phone screenshot
+![Overzicht Applicatie Klein](screenshots/overzicht-phone.png)
+
+- Taal NL/FR: klik op icoontje om de taal van de volledige website te wijzigen (voorkeur wordt opgeslagen)
+![Taal FR](screenshots/taal.png)
+
+
+- Zoeken: de ingetypte tekst zal zoeken in alle data van de stripmuren (niet hoofdletter gevoelig) en de lijst met resultaten geven (alsook het aantal). 
+    vb. Geef "steen" in => geeft 2 resultaten (stripmuur met tekenaar Willy Vandersteen - en stripmuur met adres vlaamseSTEENweg)
+    ==> de map toont nu ook enkel de gefilterde resultaten (map kan hierdoor worden uitgezoomd als de stripmuren zich dicht bij elkaar bevinden)
+![Zoekfunctie](screenshots/zoeken.png)
+
+
+- Sorteren op: dropdown met mogelijkheid om de stripmuren alfabetisch te sorteren op:
+    tekenaar of titel
+![Sorteerfunctie](screenshots/sorteren.png)
+
+- Toon enkel Favoriete Stripmuren: checkbox die overschakelt naar aangeduide favoriete stripmuren = stripmuren met ❤️ icoontje (aantal ook zichtbaar)
+![Filter Favoriete Stripmuren](screenshots/filter-favorieten.png)
+
+
+- Button Bereken Route (bij filtering op favoriete stripmuren): er wordt een wandelroute berekend en getoond op de map + instructies
+![Filter Favoriete Stripmuren](screenshots/bereken-route.png)
+
+
+- Map: bevat alle stripmuren die getoond worden onder de map
+![Kaartweergave](screenshots/map.png)
+
+- Map: klik op point geeft info
+![Popup Map Tekstballon](screenshots/map-popup-tekstballon.png)
+![Popup Map Favoriet Hartje](screenshots/map-popup-favoriet.png)
+
+- Stripmuurkaarten - Foto hover:
+![Foto Hover](screenshots/foto.png)
+
+
+- Stripmuurkaarten - Titel hover + popup op kaart:
+![Titel Hover + Klik](screenshots/titel.png)
+
+
+- Stripmuurkaarten - meer info:
+![URL Link](screenshots/meer-info.png)
+
+
+- Stripmuurkaarten - 🤍 of ❤️ icoontje:
+![Favoriet Aanduiden/Afvinken](screenshots/hartje.png)
+
 
 ## 6. Gebruikte bronnen
 
-Open Data Brussels API
+- Open Data Brussels API
 
-Documentatie uit de Canvas modules Web Advanced en Web Basic
+- Documentatie uit de Canvas modules Web Advanced en Web Basic
 
-MDN (topic: Array)
+- MDN (topic: Array)
 
-Leaflet en Leaflet Routing Machine sites: Quick Start + Documentation + GitHub
+- Leaflet en Leaflet Routing Machine sites: Quick Start + Documentation + GitHub
 
-Cartoon Bubble by Samy Menai from "https://thenounproject.com/browse/icons/term/cartoon-bubble/" title="Cartoon Bubble Icons" Noun Project (CC BY 3.0) => zie icon.svg
+- Cartoon Bubble by Samy Menai from "https://thenounproject.com/browse/icons/term/cartoon-bubble/" title="Cartoon Bubble Icons" Noun Project (CC BY 3.0) => zie icon.svg
 
-comic talk by Andy Horvath from "https://thenounproject.com/browse/icons/term/comic-talk/" title="comic talk Icons" Noun Project (CC BY 3.0) => zie lazy.svg
-
+- comic talk by Andy Horvath from "https://thenounproject.com/browse/icons/term/comic-talk/" title="comic talk Icons" Noun Project (CC BY 3.0) => zie lazy.svg
 
 ### AI chatlog
 
-0. Grid layout hulp gevraagd vooraf (nog geen account toen) zie zondag 8 maart 2026 wijzigingen in Git - maar deze heb ik zelf teruggedraaid omdat mijn eigen idee toch leuker was tov het overnemen van Grid layout (Grid layout hebben we niet gezien in cursus Web Basic, enkel flex) - zie post 9.
+00. Grid layout hulp gevraagd vooraf (nog geen account toen) zie zondag 8 maart 2026 wijzigingen in Git (deze chat heb ik jammergenoeg niet opgeslagen) - maar deze heb ik zelf teruggedraaid omdat mijn eigen idee toch leuker was tov het overnemen van Grid layout (Grid layout hebben we niet gezien in cursus Web Basic, enkel flex) - zie post 9. 
+0. Ik had de tekst van mijn chat wel gekopieerd naar een bestand. Toen gevraagd en account aanmaken was juiste oplossing. Om volledig te zijn, voeg ik wel het word bestand toe van vooraf gevraagde hulp (zie AI chatlog.docx in folder WEB ADVANCED PROJECT). Deze bevat:
+    - vraag over style.css die error gaf zolang ik nog met live server werkte (pag1)
+    - vraag over bijkomende file waarbij ik export was vergeten (pag 3)
+    - vraag over hartjes icoon (hoe dit gebruiken) (pag 5)
+    - vraag over icoon dat niet aanklikbaar was (oplossing met closest) (pag 7)
+    - vraag over flikkering van mijn foto's (oplossing = geen volledige re-render doen maar enkel hartjes updaten) (pag 11)
 1. Leaflet: basis opstelling: https://chatgpt.com/share/69b26476-1d48-800e-8cb1-ce34506716d3
     - geen resultaat: hulp gevraagd: lon/lat omgedraaid
     - geen resultaat: hulp gevraagd: icon was 0px = toegevoegd in css
