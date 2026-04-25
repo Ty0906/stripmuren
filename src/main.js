@@ -21,6 +21,9 @@ const filterFavo = document.getElementById("filter-favorites");
 const calcRoute = document.getElementById('calc-route');
 const layout = document.body;
 
+const toggleMapBtn = document.getElementById("toggle-map");
+const header = document.querySelector(".header");
+
 
 // MAP (LeafletMap/LeafletRouteMap) variabelen
 
@@ -130,6 +133,7 @@ function switchLanguage(lang) {
   renderMurals(murals, favoriteMurals, currentLang);
   lazyLoading();
   updateStatus(murals);
+  updateToggleMapText();
 }
 
 function updateStatus(murals) {
@@ -202,11 +206,37 @@ function getMurals() {
 }
 
 
+function updateToggleMapText() {
+  const isCollapsed = header.classList.contains("map-collapsed");
 
+  if (currentLang === "NL") {
+      toggleMapBtn.textContent = isCollapsed
+    ? "Kaart tonen ▼"
+    : "Kaart verbergen ▲";
+  } else {
+      toggleMapBtn.textContent = isCollapsed
+    ? "Afficher la carte ▼"
+    : "Masquer la carte ▲";
+  }
+
+}
 
 
 
 //EVENTS
+
+// Event listener voor INKLAPBARE KAART (click)
+
+toggleMapBtn.addEventListener("click", () => {
+  header.classList.toggle("map-collapsed");
+
+  updateToggleMapText();
+
+  
+  if (!header.classList.contains("map-collapsed")) {
+    map.invalidateSize();
+  }
+})
 
 // Event listener voor TAAL (click)
 
