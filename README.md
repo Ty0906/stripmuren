@@ -311,54 +311,54 @@ Dataset:
 ## 5. Screenshots van de applicatie
 
 - Algemene screenshot Stripmuren Brussel Routeplanner
-![Overzicht Applicatie](screenshots/overzicht.png)
+![Overzicht Applicatie](screenshots/overzicht.jpg)
 
 - Tablet/phone screenshot
-![Overzicht Applicatie Klein](screenshots/overzicht-phone.png)
+![Overzicht Applicatie Klein](screenshots/overzicht-phone.jpg)
 
 - Taal NL/FR: klik op icoontje om de taal van de volledige website te wijzigen (voorkeur wordt opgeslagen)
-![Taal FR](screenshots/taal.png)
+![Taal FR](screenshots/taal.jpg)
 
 
 - Zoeken: de ingetypte tekst zal zoeken in alle data van de stripmuren (niet hoofdletter gevoelig) en de lijst met resultaten geven (alsook het aantal). 
     vb. Geef "steen" in => geeft 2 resultaten (stripmuur met tekenaar Willy Vandersteen - en stripmuur met adres vlaamseSTEENweg)
     ==> de map toont nu ook enkel de gefilterde resultaten (map kan hierdoor worden uitgezoomd als de stripmuren zich dicht bij elkaar bevinden)
-![Zoekfunctie](screenshots/zoeken.png)
+![Zoekfunctie](screenshots/zoeken.jpg)
 
 
 - Sorteren op: dropdown met mogelijkheid om de stripmuren alfabetisch te sorteren op:
     tekenaar of titel
-![Sorteerfunctie](screenshots/sorteren.png)
+![Sorteerfunctie](screenshots/sorteren.jpg)
 
 - Toon enkel Favoriete Stripmuren: checkbox die overschakelt naar aangeduide favoriete stripmuren = stripmuren met ❤️ icoontje (aantal ook zichtbaar)
-![Filter Favoriete Stripmuren](screenshots/filter-favorieten.png)
+![Filter Favoriete Stripmuren](screenshots/filter-favorieten.jpg)
 
 
 - Button Bereken Route (bij filtering op favoriete stripmuren): er wordt een wandelroute berekend en getoond op de map + instructies
-![Filter Favoriete Stripmuren](screenshots/bereken-route.png)
+![Filter Favoriete Stripmuren](screenshots/bereken-route.jpg)
 
 
 - Map: bevat alle stripmuren die getoond worden onder de map
-![Kaartweergave](screenshots/map.png)
+![Kaartweergave](screenshots/map.jpg)
 
 - Map: klik op point geeft info
-![Popup Map Tekstballon](screenshots/map-popup-tekstballon.png)
-![Popup Map Favoriet Hartje](screenshots/map-popup-favoriet.png)
+![Popup Map Tekstballon](screenshots/map-popup-tekstballon.jpg)
+![Popup Map Favoriet Hartje](screenshots/map-popup-favoriet.jpg)
 
 - Stripmuurkaarten - Foto hover:
-![Foto Hover](screenshots/foto.png)
+![Foto Hover](screenshots/foto.jpg)
 
 
 - Stripmuurkaarten - Titel hover + popup op kaart:
-![Titel Hover + Klik](screenshots/titel.png)
+![Titel Hover + Klik](screenshots/titel.jpg)
 
 
 - Stripmuurkaarten - meer info:
-![URL Link](screenshots/meer-info.png)
+![URL Link](screenshots/meer-info.jpg)
 
 
 - Stripmuurkaarten - 🤍 of ❤️ icoontje:
-![Favoriet Aanduiden/Afvinken](screenshots/hartje.png)
+![Favoriet Aanduiden/Afvinken](screenshots/hartje.jpg)
 
 
 ## 6. Gebruikte bronnen
