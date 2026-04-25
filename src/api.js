@@ -4,7 +4,7 @@
 
 const API_URL = 'https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=-1';
 
-export async function fetchMurals(params) {
+export async function fetchMurals() {
     
 
     const response = await fetch(API_URL);
