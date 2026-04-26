@@ -72,7 +72,7 @@ export function createFormatterNL() {
             break;
 
         default:
-        // 👉 fallback voor Engelse instructies
+        // fallback voor Engelse instructies
         text = vertaalEngelseTurn(instr);
         break;
         }

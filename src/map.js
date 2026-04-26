@@ -7,7 +7,7 @@ export function initMap(map) {
   markersLayer = L.featureGroup().addTo(map);
 }
 
-export function renderMap(map, murals, favoriteMurals, iconNormal, iconFavo) {
+export function renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang) {
   //Leaflet toevoegen
   
 
@@ -23,7 +23,11 @@ export function renderMap(map, murals, favoriteMurals, iconNormal, iconFavo) {
 
     let marker = L.marker([mural.geo_point.lat, mural.geo_point.lon], { icon: myIcon }).addTo(markersLayer);
 
-    marker.bindPopup(mural.naam_fresco_nl);
+    const popupTitle = 
+      currentLang === "NL"
+      ? mural.naam_fresco_nl || "Titel onbekend"
+      : mural.nom_de_la_fresque || "Titre inconnu (FR)";
+    marker.bindPopup(popupTitle);
 
     
     if (muralId) { muralMarkers[muralId] = marker; };

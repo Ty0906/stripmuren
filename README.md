@@ -130,9 +130,9 @@ Dataset:
         - file render.js: lijnnr 30-35 + 54-94
 
     Event listeners:
-        - main.js lijnnr 230 & 243-244 & 303 & 372 = click events (inklapbare map, taal en favorieten en popup kaart en bereken route)
-        - main.js lijnr 248 = input event (zoeken)
-        - main.js lijnnr 260 & 270  = change event (sorteren en filteren favorieten)
+        - main.js lijnnr 231 & 244-245 & 304 & 373 = click events (inklapbare map, taal en favorieten en popup kaart en bereken route)
+        - main.js lijnr 249 = input event (zoeken)
+        - main.js lijnnr 261 & 271  = change event (sorteren en filteren favorieten)
 
 ### 3.2 Modern JavaScript:
 
@@ -140,8 +140,8 @@ Dataset:
         gebruikt voor waarden die enkel geinitieerd en niet heringesteld worden
         - api.js lijnnr 5 & 10 & 16 & 17
         - language.js lijnnr 6 & 191
-        - main.js lijnnr 13-44 & & 76 & 95 & 131 & 191 & 210 & 249 & 261 & 272 & 305 & 309 & 332 & 357 & 366 & 378 & & 381 & 385 & 429 & 433 & 434 & 446 & 448 & 452 
-        - map.js lijnnr 19-22 & 39
+        - main.js lijnnr 13-44 & & 76 & 95 & 131 & 192 & 211 & 250 & 262 & 273 & 306 & 310 & 333 & 358 & 367 & 379 & 382 & 386 & 430 & 434 & 435 & 447 & 449 & 453 
+        - map.js lijnnr 19-22 & 43
 
     - let:
         gebruikt voor variabele waarden (worden heringesteld)
@@ -151,50 +151,50 @@ Dataset:
     - template literals:
         vooral gebruikt voor HTML structuur dynamisch op te bouwen
         - api.js lijnnr 13 (voor error foutmelding, met literals duidelijker/leesbaarder)
-        - main.js lijnnr 44 & 144-145 & 150-151 
+        - main.js lijnnr 44 & 145-146 & 151-152 
         - render.js lijnnr 30-35 & 54-81
 
     - iteratie over arrays
         door mijn (lijst)items loopen om de UI te renderen
         - main.js lijnnr 73 & 97 (forEach)
-        - main.js lijnnr 165 & 181 (for)
+        - main.js lijnnr 166 & 182 (for)
         - render.js lijnnr 90
 
     - array methodes
         sort en filter functies gebruikt (MDN tutorial)
-        - main.js lijnnr 195 & 200 (.sort)
-        - main.js lijnnr 56 & 320 & 448 (.filter)
+        - main.js lijnnr 196 & 201 (.sort)
+        - main.js lijnnr 56 & 321 & 449 (.filter)
 
     - arrow functions
         waar duidelijk gebruikt voor events en array methodes
-        - main.js lijnnr 56 & 73 & 97 & 195 & 200 & 320 & 448 (array methodes)
-        - main.js lijnnr 230 & 243-244 & 248 & 260 & 270 & 376 (events)
+        - main.js lijnnr 56 & 73 & 97 & 196 & 201 & 321 & 449 (array methodes)
+        - main.js lijnnr 231 & 244-245 & 249 & 261 & 271 & 377 (events)
 
     - conditional (ternary) operator 
-        moderne if..else gebruikt bij condities met 1 lijn code als resultaat voor leesbaarheid - zie ook functie updateStatus in main.js lijnnr 139 en updateToggleMapText in main.js lijnnr 209
+        moderne if..else gebruikt bij condities met 1 lijn code als resultaat voor leesbaarheid - zie ook functie updateStatus in main.js lijnnr 140 en updateToggleMapText in main.js lijnnr 210
         - language.js lijnner 69 & 70
-        - main.js lijnnr 143-145 & 149-151 & 166 & 328 & 390-392 & 420-422 
-        - map.js lijnnr 19 & 22
+        - main.js lijnnr 144-146 & 150-152 & 167 & 329 & 391-393 & 421-423 
+        - map.js lijnnr 19 & 22 & 27-29
         - render.js lijnnr 9 & 13 & 17 & 21 & 36-45 & 49
 
     - Callback functions 
         Event listeners gebruiken callbacks omdat code pas uitgevoerd wordt wanneer event plaatsvindt
-        - main.js lijnnr 243-244 (callback = () => switchLanguage("NL") of ("FR"), wordt doorgegeven aan addEventListener)
-        - main.js lijnnr 248 & 260 & 270 & 303 & 376 (callback = () => {...})
-        - main.js lijnnr 56 & 320 & 448 (filter callbacks: filter roept mijn functie aan om te beslissen welke elementen blijven)
+        - main.js lijnnr 244-245 (callback = () => switchLanguage("NL") of ("FR"), wordt doorgegeven aan addEventListener)
+        - main.js lijnnr 249 & 261 & 271 & 304 & 377 (callback = () => {...})
+        - main.js lijnnr 56 & 321 & 449 (filter callbacks: filter roept mijn functie aan om te beslissen welke elementen blijven)
         - main.js lijnnr 73 & 97
         (forEach callbacks =(entry => ... en img => ..) : forEach voert mijn functie uit voor elk element )
         
 
     - async/await/promises
         - api.js async function fetchMurals() 
-        - main.js lijnnr 443-473 async function loadMurals() met try/catch 
+        - main.js lijnnr 444-474 async function loadMurals() met try/catch 
 
     - Observer API
         - main.js lijnnr 64-99 IntersectionObserver (lazy image loading)
 
     - Local Storage
-        - main.js lijnnr 51-59 & 103 & 326 (favoriteMurals & PreferredLanguage)
+        - main.js lijnnr 51-59 & 103 & 327 (favoriteMurals & PreferredLanguage)
 
 ### 3.3 Data & API:
 
@@ -253,7 +253,7 @@ Dataset:
         checkbox "toon enkel favoriete muren" (index.html lijnnr 54-55)
             style.css lijnnr 105-144 & 160-166 & 415-420 & 490-499 & 506-511
 
-        button "bereken route" (verschijnt enkel bij check favoriete muren=true (zie main.js lijnnr 277-293 & 338-347))
+        button "bereken route" (verschijnt enkel bij check favoriete muren=true (zie main.js lijnnr 278-294 & 339-348))
             style.css lijnnr 92-104 & 501
 
         aanklikbaar icoontje (❤️) voor aanduiden favoriete stripmuur (render.js lijnnr 76-78 )

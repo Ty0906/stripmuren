@@ -134,6 +134,7 @@ function switchLanguage(lang) {
   lazyLoading();
   updateStatus(murals);
   updateToggleMapText();
+  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
 }
 
 function updateStatus(murals) {
@@ -250,7 +251,7 @@ searchInputElement.addEventListener("input", () => {
   renderMurals(murals, favoriteMurals, currentLang);
   lazyLoading();
   
-  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
+  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
 
  updateStatus(murals);
 });
@@ -261,7 +262,7 @@ sortOption.addEventListener("change", () => {
   const murals = getMurals();
   renderMurals(murals, favoriteMurals, currentLang);
   lazyLoading();
-  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
+  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
   updateStatus(murals);
 })
 
@@ -294,7 +295,7 @@ filterFavo.addEventListener('change', () => {
 
   updateStatus(murals);
 
-  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
+  renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
 });
 
 // Event listener voor AANPASSEN FAVORIETEN + POPUP KAART (click)
@@ -333,7 +334,7 @@ document.addEventListener('click', function (event) {
     renderMurals(murals, favoriteMurals, currentLang);
     lazyLoading();
     updateStatus(murals);
-    renderMap(map, murals, favoriteMurals, iconNormal, iconFavo);
+    renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
 
     if (!filterFavo || !filterFavo.checked) {
 
@@ -453,7 +454,7 @@ async function loadMurals() {
 
     renderMurals(muralsFiltered, favoriteMurals, currentLang);
     lazyLoading();
-    renderMap(map, muralsFiltered, favoriteMurals, iconNormal, iconFavo);
+    renderMap(map, muralsFiltered, favoriteMurals, iconNormal, iconFavo, currentLang);
     updateStatus(muralsFiltered);
 
     //resultaten in DOM tonen
