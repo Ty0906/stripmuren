@@ -4,7 +4,7 @@ import './style.css';
 
 import { fetchMurals } from "./api.js";
 import { renderMurals } from "./render.js";
-import { createFormatterNL, createFormatterFR } from './language.js';
+import { createFormatter } from './language.js';
 import { renderMap, muralMarkers, initMap } from './map.js';
 
 
@@ -103,6 +103,11 @@ function switchLanguage(lang) {
   localStorage.setItem("preferredLanguage", lang);
   document.getElementById("NL").classList.remove("active");
   document.getElementById("FR").classList.remove("active");
+
+  searchInputElement.placeholder =
+  currentLang === "NL"
+    ? "Zoek op titel of tekenaar"
+    : "Rechercher par titre ou dessinateur";
   
   if (lang === "NL") {
     document.getElementById("NL").classList.add("active");
@@ -115,6 +120,7 @@ function switchLanguage(lang) {
     document.querySelector('#sort-murals option[value="tekenaar"]').textContent = "Tekenaar";
 
     calcRoute.textContent = "Bereken route";
+    calcRoute.title = "Bereken route";
   }
   else {
     document.getElementById("FR").classList.add("active");
@@ -126,6 +132,7 @@ function switchLanguage(lang) {
     document.querySelector('#sort-murals option[value="titel"]').textContent = "Titre";
     document.querySelector('#sort-murals option[value="tekenaar"]').textContent = "Dessinateur";
     calcRoute.textContent = "Calculer l'itinéraire";
+    calcRoute.title = "Calculer l'itinéraire";
   }
   
   const murals = getMurals();
@@ -135,6 +142,7 @@ function switchLanguage(lang) {
   updateStatus(murals);
   updateToggleMapText();
   renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
+  updateRouteButton();
 }
 
 function updateStatus(murals) {
@@ -150,6 +158,31 @@ function updateStatus(murals) {
       currentLang === "NL"
         ? `Aantal Favoriete Stripmuren ❤️: ${murals.length}`
         : `Nombre de Fresques Favorites ❤️: ${murals.length}`;
+  }
+}
+
+function updateRouteButton() {
+  
+  const visibleMurals = getMurals();
+  
+  if (!filterFavo.checked) {
+    calcRoute.disabled = true;
+    calcRoute.title =
+      currentLang === "NL"
+        ? "Activeer favorieten om een route te berekenen"
+        : "Activez les favoris pour calculer un itinéraire";
+  } else if (visibleMurals.length < 2) {
+    calcRoute.disabled = true;
+    calcRoute.title =
+      currentLang === "NL"
+        ? "Selecteer minstens 2 favorieten"
+        : "Sélectionnez au moins 2 favoris";
+  } else {
+    calcRoute.disabled = false;
+    calcRoute.title =
+      currentLang === "NL"
+        ? "Bereken route"
+        : "Calculer l'itinéraire";
   }
 }
 
@@ -180,8 +213,9 @@ function getMurals() {
     let searchResult = [];
 
     for (let mural of sortResult) {
-      let json = JSON.stringify(mural).toLowerCase();
-      if (json.includes(searchInput)) {
+      const title = (mural.naam_fresco_nl || "").toLowerCase();
+      const dessinateur = (mural.dessinateur || "").toLowerCase();
+      if (title.includes(searchInput) || dessinateur.includes(searchInput)) {
         searchResult.push(mural);
       }
     }
@@ -251,9 +285,12 @@ searchInputElement.addEventListener("input", () => {
   renderMurals(murals, favoriteMurals, currentLang);
   lazyLoading();
   
+  
+
   renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
 
- updateStatus(murals);
+  updateStatus(murals);
+  updateRouteButton();
 });
 
 // Event listener voor SORTEREN (change)
@@ -264,6 +301,7 @@ sortOption.addEventListener("change", () => {
   lazyLoading();
   renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
   updateStatus(murals);
+  updateRouteButton();
 })
 
 // Event listener voor FILTER FAVORIETEN (change)
@@ -279,21 +317,20 @@ filterFavo.addEventListener('change', () => {
 
     
     layout.classList.remove("favorites-checked");
-    calcRoute.style.display = "none";
-    
 
     if (routingControl) {
       map.removeControl(routingControl);
+      routingControl = null;
     }
 
   }
   else {
     
     layout.classList.add("favorites-checked");
-    calcRoute.style.display = "inline-block";
-  }
+  } 
 
   updateStatus(murals);
+  updateRouteButton();
 
   renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
 });
@@ -334,20 +371,20 @@ document.addEventListener('click', function (event) {
     renderMurals(murals, favoriteMurals, currentLang);
     lazyLoading();
     updateStatus(murals);
+    
     renderMap(map, murals, favoriteMurals, iconNormal, iconFavo, currentLang);
 
     if (!filterFavo || !filterFavo.checked) {
 
       layout.classList.remove("favorites-checked");
-      calcRoute.style.display = "none";
+
     }
     else {
       layout.classList.add("favorites-checked");
-      calcRoute.style.display = "inline-block";
 
     }
     
- 
+    updateRouteButton();
 
     return;
   }
@@ -398,9 +435,8 @@ calcRoute.addEventListener('click', () => {
     map.removeControl(routingControl);
   }
 
-  let formatterLang = createFormatterNL();
-  if (currentLang === "FR") { formatterLang = createFormatterFR(); }
-  
+  const formatterLang = createFormatter(currentLang);
+   
   
   routingControl = L.Routing.control({
     waypoints: points,
@@ -456,6 +492,7 @@ async function loadMurals() {
     lazyLoading();
     renderMap(map, muralsFiltered, favoriteMurals, iconNormal, iconFavo, currentLang);
     updateStatus(muralsFiltered);
+    updateRouteButton();
 
     //resultaten in DOM tonen
     console.log(allMurals);
@@ -474,5 +511,6 @@ async function loadMurals() {
 
 initLazyLoading();
 switchLanguage(currentLang);
+updateRouteButton();
 loadMurals();
 
