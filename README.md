@@ -28,12 +28,12 @@ Gebruikers kunnen:
 ### Functionaliteiten 
 
 - Taal NL/FR: klik op icoontje om de taal van de volledige website te wijzigen 
-    voorkeur wordt opgeslagen en duidelijk visueel aangeduid (roze kleur))
+    voorkeur wordt opgeslagen en duidelijk visueel aangeduid (roze kleur)
 
 - Zichtbaarheid aantal stripmuren: elke keer wordt het aantal stripmuren (ook na filtering/enkel favoriete muren tonen enz) duidelijk getoond
 
-- Zoeken: de ingetypte tekst zal zoeken in alle data van de stripmuren (niet hoofdletter gevoelig) en de lijst met resultaten geven (alsook het aantal). 
-    vb. Geef "steen" in => geeft 2 resultaten (stripmuur met tekenaar Willy Vandersteen - en stripmuur met adres vlaamseSTEENweg)
+- Zoeken: het inputveld geeft aan dat de ingetypte tekst zal zoeken op titel en tekenaar van de stripmuren (niet hoofdletter gevoelig) en de lijst met resultaten zal geven (alsook het aantal). 
+    vb. Geef "steen" in => geeft als resultaat (stripmuur met tekenaar Willy Vandersteen)
 
     ==> de map toont nu ook enkel de gefilterde resultaten (map kan hierdoor worden uitgezoomd als de stripmuren zich dicht bij elkaar bevinden)
 
@@ -44,16 +44,19 @@ Gebruikers kunnen:
 
 - Toon enkel Favoriete Stripmuren: checkbox die overschakelt naar aangeduide favoriete stripmuren = stripmuren met ❤️ icoontje (aantal ook zichtbaar)
 
-    - de button "bereken route" verschijnt nu ook
+    - de button "bereken route" verschijnt nu ook 'aanklikbaar' indien er minstens 2 favoriete stripmuren werden aangeduid 
     - de map wordt iets vergroot zodat bij een route een duidelijker beeld kan gegeven worden
     - de map toont enkel de favoriete stripmuren met een hart icoontje ipv een tekstballon
     - afvinken van een favoriet zal deze onmiddellijk uit de lijst wegfilteren (aantal wordt ook aangepast)
 
 - Button Bereken Route (bij filtering op favoriete stripmuren): er wordt een wandelroute berekend en getoond op de map + instructies
 
-    - veiligheid en alert bij minder dan 2 favoriete muren (je kan geen route berekenen met maar 1 of geen punten)
     - routeinstructies die zichtbaar zijn op de map (je kan volgen waar je zit bij scrollen op de instructie)
     - routeinstructies zijn in de taal van de website (NL of FR)
+    opmerking:
+    - deze button is niet aanklikbaar zolang favoriete stripmuren niet werd aangevinkt. Bij hover over de knop, krijg je hiervoor de instructie te zien
+    - deze button is niet aanklikbaar zolang er minder dan 2 favoriete stripmuren worden aangeduid (je kan geen route berekenen met minder dan 2 punten). Bij hover over de knop, krijg je hiervoor de instructie te zien.
+
 
 - Button Kaart verbergen / Kaart tonen: zorgt voor weergave van enkel de stripmuurkaarten of standaard weergave van zowel stripmuurkaarten als map met locatie van de stripmuurkaarten (points)
 
@@ -123,78 +126,78 @@ Dataset:
 ### 3.1 DOM-manipulatie:
 
     Selecteren van elementen: 
-        - main.js lijnnr 13-25, 104-105, 108-128 (document.getElementById, querySelector, ClassList)
+        - main.js lijnnr 13-25, 104-105, 113-135 (document.getElementById, querySelector, ClassList)
         - render.js lijnnr 87
 
     Renderen van HTML kaarten: 
         - file render.js: lijnnr 30-35 + 54-94
 
     Event listeners:
-        - main.js lijnnr 231 & 244-245 & 304 & 373 = click events (inklapbare map, taal en favorieten en popup kaart en bereken route)
-        - main.js lijnr 249 = input event (zoeken)
-        - main.js lijnnr 261 & 271  = change event (sorteren en filteren favorieten)
+        - main.js lijnnr 265 & 278-279 & 341 & 414 = click events (inklapbare map, taal en favorieten en popup kaart en bereken route)
+        - main.js lijnr 283 = input event (zoeken)
+        - main.js lijnnr 298 & 309  = change event (sorteren en filteren favorieten)
 
 ### 3.2 Modern JavaScript:
 
     - const:
         gebruikt voor waarden die enkel geinitieerd en niet heringesteld worden
         - api.js lijnnr 5 & 10 & 16 & 17
-        - language.js lijnnr 6 & 191
-        - main.js lijnnr 13-44 & & 76 & 95 & 131 & 192 & 211 & 250 & 262 & 273 & 306 & 310 & 333 & 358 & 367 & 379 & 382 & 386 & 430 & 434 & 435 & 447 & 449 & 453 
+        - language.js lijnnr 3 & 83 & 85
+        - main.js lijnnr 13-44 & & 76 & 95 & 138 & 166 & 216 & 226 & 245 & 284 & 299 & 311 & 343 & 347 & 370 & 395 & 404 & 416 & 419 & 423 & 438 & 466 & 470-471 & 483 & 485 & 489 
         - map.js lijnnr 19-22 & 43
 
     - let:
         gebruikt voor variabele waarden (worden heringesteld)
-        - main.js lijnnr 53-64
+        - main.js lijnnr 53-64 & 191-195 & 199-200 & 213-215 & 412 & 418
         - render.js lijnnr 5-49 & 87
 
     - template literals:
         vooral gebruikt voor HTML structuur dynamisch op te bouwen
         - api.js lijnnr 13 (voor error foutmelding, met literals duidelijker/leesbaarder)
-        - main.js lijnnr 44 & 145-146 & 151-152 
+        - main.js lijnnr 44 & 153-154 & 159-160 
         - render.js lijnnr 30-35 & 54-81
 
     - iteratie over arrays
         door mijn (lijst)items loopen om de UI te renderen
         - main.js lijnnr 73 & 97 (forEach)
-        - main.js lijnnr 166 & 182 (for)
+        - main.js lijnnr 199 & 215 & 418 (for)
         - render.js lijnnr 90
 
     - array methodes
         sort en filter functies gebruikt (MDN tutorial)
-        - main.js lijnnr 196 & 201 (.sort)
-        - main.js lijnnr 56 & 321 & 449 (.filter)
+        - main.js lijnnr 230 & 235 (.sort)
+        - main.js lijnnr 56 & 358 & 485 (.filter)
 
     - arrow functions
         waar duidelijk gebruikt voor events en array methodes
-        - main.js lijnnr 56 & 73 & 97 & 196 & 201 & 321 & 449 (array methodes)
-        - main.js lijnnr 231 & 244-245 & 249 & 261 & 271 & 377 (events)
+        - main.js lijnnr 56 & 72-73 & 97 & 230 & 235 & 358 & 485 (array methodes)
+        - main.js lijnnr 265 & 278-279 & 283 & 298 & 309 & 414 (events)
 
     - conditional (ternary) operator 
-        moderne if..else gebruikt bij condities met 1 lijn code als resultaat voor leesbaarheid - zie ook functie updateStatus in main.js lijnnr 140 en updateToggleMapText in main.js lijnnr 210
-        - language.js lijnner 69 & 70
-        - main.js lijnnr 144-146 & 150-152 & 167 & 329 & 391-393 & 421-423 
+        moderne if..else gebruikt bij condities met 1 lijn code als resultaat voor leesbaarheid - zie ook functie updateStatus in main.js lijnnr 148, updateRouteButton in main lijnnr. 164 en updateToggleMapText in main.js lijnnr 244
+        - language.js lijnner 85 & 102-116
+        - main.js lijnnr 109-110 & 152-154 & 158-160 & 171-173 & 177-179 & 183-185 & 200 & 148-250 & 252-254 & 366 & 428-430 
         - map.js lijnnr 19 & 22 & 27-29
         - render.js lijnnr 9 & 13 & 17 & 21 & 36-45 & 49
 
     - Callback functions 
         Event listeners gebruiken callbacks omdat code pas uitgevoerd wordt wanneer event plaatsvindt
-        - main.js lijnnr 244-245 (callback = () => switchLanguage("NL") of ("FR"), wordt doorgegeven aan addEventListener)
-        - main.js lijnnr 249 & 261 & 271 & 304 & 377 (callback = () => {...})
-        - main.js lijnnr 56 & 321 & 449 (filter callbacks: filter roept mijn functie aan om te beslissen welke elementen blijven)
+        - main.js lijnnr 278-279 (callback = () => switchLanguage("NL") of ("FR"), wordt doorgegeven aan addEventListener)
+        - main.js lijnnr 283 & 298 & 309 & 304 & 414 (callback = () => {...})
+        - main.js lijnnr 56 & 358 & 485 (filter callbacks: filter roept mijn functie aan om te beslissen welke elementen blijven)
         - main.js lijnnr 73 & 97
         (forEach callbacks =(entry => ... en img => ..) : forEach voert mijn functie uit voor elk element )
         
 
     - async/await/promises
         - api.js async function fetchMurals() 
-        - main.js lijnnr 444-474 async function loadMurals() met try/catch 
+        - main.js lijnnr 480-509 async function loadMurals() met try/catch 
 
     - Observer API
         - main.js lijnnr 64-99 IntersectionObserver (lazy image loading)
 
     - Local Storage
-        - main.js lijnnr 51-59 & 103 & 327 (favoriteMurals & PreferredLanguage)
+        - main.js lijnnr 51-59 & 103 & 364 (favoriteMurals & PreferredLanguage)
 
 ### 3.3 Data & API:
 
@@ -248,20 +251,20 @@ Dataset:
     - Gebruiksvriendelijke elementen (verwijderknoppen, icoontjes,..)
 
         Button "Toon kaart/verberg kaart" geeft je de mogelijkheid om gebruiksvriendelijk door alle kaarten te scrollen zonder dat de kaart "in de weg" staat (index.html lijnnr 61-63)
-            style.css lijnnr 174-208 & 530-549 
+            style.css lijnnr 176-208 & 532-551 
 
         checkbox "toon enkel favoriete muren" (index.html lijnnr 54-55)
-            style.css lijnnr 105-144 & 160-166 & 415-420 & 490-499 & 506-511
+            style.css lijnnr 107-144 & 162-168 & 417-422 & 492-501 & 508-513
 
-        button "bereken route" (verschijnt enkel bij check favoriete muren=true (zie main.js lijnnr 278-294 & 339-348))
-            style.css lijnnr 92-104 & 501
+        button "bereken route" (enkel aanklikbaar bij check favoriete muren (min 2)=true (zie main.js lijnnr 309-336 & 341-390 en function updateRouteButton() lijnnr 164-187 ))
+            style.css lijnnr 92-104 & 503
 
         aanklikbaar icoontje (❤️) voor aanduiden favoriete stripmuur (render.js lijnnr 76-78 )
-            style.css lijnnr 343-354
+            style.css lijnnr 345-356
 
 
         buttons voor taal NL/FR (index.html lijnnr 20-23)
-            style.css lijnnr 39-57 & 447-450
+            style.css lijnnr 39-57 & 449-452
 
         dropdown voor sorteren op titel, tekenaar (index.html lijnnr 39-45)
             style.css lijnnr 65-90
@@ -269,8 +272,8 @@ Dataset:
     - Responsive design
         style.css bestaat uit volgende delen:
             - MOBILE FIRST (start lijnnr 23) voor kleine schermen tot 700px
-            - TABLET (start lijnnr 388) voor schermen van 701px tot 1099px
-            - DESKTOP (start lijnnr 434) voor desktop (vanaf 1100px)
+            - TABLET (start lijnnr 390) voor schermen van 701px tot 1099px
+            - DESKTOP (start lijnnr 436) voor desktop (vanaf 1100px)
 
 ### 3.6 Tooling & structuur:
 
@@ -330,8 +333,8 @@ Dataset:
 ![Taal FR](screenshots/taal.jpg)
 
 
-- Zoeken: de ingetypte tekst zal zoeken in alle data van de stripmuren (niet hoofdletter gevoelig) en de lijst met resultaten geven (alsook het aantal). 
-    vb. Geef "steen" in => geeft 2 resultaten (stripmuur met tekenaar Willy Vandersteen - en stripmuur met adres vlaamseSTEENweg)
+- Zoeken: Zoeken: het inputveld geeft aan dat de ingetypte tekst zal zoeken op titel en tekenaar van de stripmuren (niet hoofdletter gevoelig) en de lijst met resultaten zal geven (alsook het aantal). 
+    vb. Geef "steen" in => geeft als resultaat (stripmuur met tekenaar Willy Vandersteen)
     ==> de map toont nu ook enkel de gefilterde resultaten (map kan hierdoor worden uitgezoomd als de stripmuren zich dicht bij elkaar bevinden)
 ![Zoekfunctie](screenshots/zoeken.jpg)
 
@@ -345,7 +348,13 @@ Dataset:
 
 
 - Button Bereken Route (bij filtering op favoriete stripmuren): er wordt een wandelroute berekend en getoond op de map + instructies
-![Filter Favoriete Stripmuren](screenshots/bereken-route.jpg)
+![Button Bereken Route](screenshots/bereken-route.jpg)
+
+- Instructies bij Button Bereken Route
+    - niet aanklikbaar zolang favoriete stripmuren niet werd aangevinkt: instructie wordt getoond 
+![Button Bereken Route](screenshots/bereken-route-instructie-favorieten.jpg)
+    - niet aanklikbaar zolang er minder dan 2 favoriete stripmuren worden aangeduid: instructie wordt getoond 
+![Button Bereken Route](screenshots/bereken-route-instructie-aantal.jpg)
 
 
 - Map: bevat alle stripmuren die getoond worden onder de map
