@@ -333,7 +333,7 @@ Dataset:
 ![Taal FR](screenshots/taal.jpg)
 
 
-- Zoeken: Zoeken: het inputveld geeft aan dat de ingetypte tekst zal zoeken op titel en tekenaar van de stripmuren (niet hoofdletter gevoelig) en de lijst met resultaten zal geven (alsook het aantal). 
+- Zoeken: het inputveld geeft aan dat de ingetypte tekst zal zoeken op titel en tekenaar van de stripmuren (niet hoofdletter gevoelig) en de lijst met resultaten zal geven (alsook het aantal). 
     vb. Geef "steen" in => geeft als resultaat (stripmuur met tekenaar Willy Vandersteen)
     ==> de map toont nu ook enkel de gefilterde resultaten (map kan hierdoor worden uitgezoomd als de stripmuren zich dicht bij elkaar bevinden)
 ![Zoekfunctie](screenshots/zoeken.jpg)
