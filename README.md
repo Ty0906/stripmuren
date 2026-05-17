@@ -324,7 +324,7 @@ Dataset:
 - Tablet/phone screenshot
 ![Overzicht Applicatie Klein](screenshots/overzicht-phone.jpg)
 
-- Button Kaart verbergen : overzichttelijke weergave van alle stripmuurkaarten
+- Button Kaart verbergen : overzichtelijke weergave van alle stripmuurkaarten
 ![Overzicht Applicatie zonder Kaart](screenshots/overzicht-zonder-kaart.jpg)
 
 - Button Kaart tonen: terug zichtbaar maken van de kaart (zie Algemene screenshot)
